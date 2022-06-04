@@ -1,0 +1,30 @@
+{
+  "name": "beams-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/icons-material": "^5.8.0",
+    "@mui/material": "^5.8.1",
+    "apexcharts": "^3.35.3",
+    "axios": "^0.26.1",
+    "luxon": "^2.4.0",
+    "react": "^18.0.0",
+    "react-apexcharts": "^1.4.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.3.0",
+    "socket.io-client": "^4.4.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@vitejs/plugin-react": "^1.3.0",
+    "vite": "^2.9.9"
+  }
+}
