@@ -1,7 +1,6 @@
 import Chart from "react-apexcharts";
 
-const LineChart = ({ data, xAxis, height, width }) => {
-
+const LineChart = ({ data, xAxis }) => {
   return (
     <Chart
       options={{
@@ -10,12 +9,20 @@ const LineChart = ({ data, xAxis, height, width }) => {
         },
         xaxis: {
           categories: xAxis,
+          type: "datetime",
+        },
+        yaxis: {
+          labels: {
+            formatter: (val) => val.toFixed(4),
+          },
+          title: { text: "Value" },
+        },
+        stroke: {
+          curve: "smooth",
         },
       }}
       series={data}
       type="line"
-      // height={height || "250px"}
-      // width={width || "250px"}
       height="100%"
       width="100%"
     />

@@ -9,19 +9,26 @@ import {
   FormControlLabel,
   FormGroup,
   Grid,
+  IconButton,
   Stack,
+  TextField,
   Typography,
 } from "@mui/material";
 import React from "react";
 import { useNode } from "../../../controllers/nodeController";
 import LineChart from "../../../shared/components/LineChart";
+import RealTimeChart from "../../../shared/components/RealTimeChart";
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { DateTimePicker } from "@mui/x-date-pickers";
 
 const NodeDetailsPage = () => {
-  const { readings } = useNode();
+  const { readings, value, setValue } = useNode();
 
   return (
     <Container sx={{ height: "100%" }}>
-      <Box sx={{ height: "80%", display: "flex", flexDirection: "column" }}>
+      <Box sx={{ height: "60%", display: "flex", flexDirection: "column" }}>
         <Stack
           direction="row"
           justifyContent="stretch"
@@ -54,18 +61,7 @@ const NodeDetailsPage = () => {
                 alignItems: "stretch",
               }}
             >
-              {readings && (
-                <LineChart
-                  data={[
-                    { name: "X", data: readings.rawX },
-                    { name: "Y", data: readings.rawY },
-                    { name: "Z", data: readings.rawZ },
-                  ]}
-                  xAxis={readings.rawDatetime}
-                  height={"100%"}
-                  width={"100%"}
-                />
-              )}
+              {readings && <RealTimeChart />}
               {!readings && <CircularProgress sx={{ alignSelf: "center" }} />}
             </CardContent>
           </Card>
@@ -81,10 +77,22 @@ const NodeDetailsPage = () => {
             <CardHeader
               title={
                 <Typography variant="h6" color="white">
-                  Accelerometer Raw Reading Snapshot
+                  Raw Reading Snapshot
                 </Typography>
               }
               sx={{ backgroundColor: "primary.main" }}
+              action={
+                <LocalizationProvider dateAdapter={AdapterLuxon}>
+                  <DateTimePicker
+                    renderInput={(props) => <TextField {...props} />}
+                    label="DateTimePicker"
+                    value={value}
+                    onChange={(newValue) => {
+                      setValue(newValue);
+                    }}
+                  />
+                </LocalizationProvider>
+              }
             />
             <CardContent
               sx={{
@@ -103,8 +111,6 @@ const NodeDetailsPage = () => {
                     { name: "Z", data: readings.rawZ },
                   ]}
                   xAxis={readings.rawDatetime}
-                  height={"100%"}
-                  width={"100%"}
                 />
               )}
               {!readings && <CircularProgress sx={{ alignSelf: "center" }} />}
@@ -112,7 +118,7 @@ const NodeDetailsPage = () => {
           </Card>
         </Stack>
       </Box>
-      <Box sx={{ height: "80%", display: "flex", flexDirection: "column" }}>
+      <Box sx={{ height: "60%", display: "flex", flexDirection: "column" }}>
         <Stack
           direction="row"
           justifyContent="stretch"
@@ -145,18 +151,7 @@ const NodeDetailsPage = () => {
                 alignItems: "stretch",
               }}
             >
-              {readings && (
-                <LineChart
-                  data={[
-                    { name: "X", data: readings.rawX },
-                    { name: "Y", data: readings.rawY },
-                    { name: "Z", data: readings.rawZ },
-                  ]}
-                  xAxis={readings.rawDatetime}
-                  height={"100%"}
-                  width={"100%"}
-                />
-              )}
+              {readings && <RealTimeChart />}
               {!readings && <CircularProgress sx={{ alignSelf: "center" }} />}
             </CardContent>
           </Card>
@@ -172,10 +167,22 @@ const NodeDetailsPage = () => {
             <CardHeader
               title={
                 <Typography variant="h6" color="white">
-                  Accelerometer FFT Reading Snapshot
+                  FFT Reading Snapshot
                 </Typography>
               }
               sx={{ backgroundColor: "primary.main" }}
+              action={
+                <LocalizationProvider dateAdapter={AdapterLuxon}>
+                  <DateTimePicker
+                    renderInput={(props) => <TextField {...props} />}
+                    label="DateTimePicker"
+                    value={value}
+                    onChange={(newValue) => {
+                      setValue(newValue);
+                    }}
+                  />
+                </LocalizationProvider>
+              }
             />
             <CardContent
               sx={{
@@ -194,8 +201,6 @@ const NodeDetailsPage = () => {
                     { name: "Z", data: readings.fftZ },
                   ]}
                   xAxis={readings.fftDatetime}
-                  height={"100%"}
-                  width={"100%"}
                 />
               )}{" "}
               {!readings && <CircularProgress sx={{ alignSelf: "center" }} />}

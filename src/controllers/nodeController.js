@@ -9,6 +9,7 @@ export const useNode = () => {
   const { nodeId } = useParams();
   const { state } = useLocation();
   const [readings, setReadings] = useState();
+  const [value, setValue] = useState(null);
   const { loadingDispatch } = useContext(LoadingContext);
   const { snackbarDispatch } = useContext(SnackbarContext);
 
@@ -62,5 +63,5 @@ export const useNode = () => {
 
   useSocket(state?.serialKey, socketHandler);
 
-  return { readings };
+  return { readings, value, setValue };
 };
