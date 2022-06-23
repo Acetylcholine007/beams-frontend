@@ -1,5 +1,4 @@
 import axios from "axios";
-import { API_URL, APP_DEBUG, LS_USER_DATA } from "./constants";
 
 const requestAxios = async (
   endpoint,
@@ -9,10 +8,10 @@ const requestAxios = async (
 ) => {
   try {
     method = (method && method.toUpperCase()) || "GET";
-    const storedData = JSON.parse(localStorage.getItem(LS_USER_DATA));
+    const storedData = JSON.parse(
+      localStorage.getItem(import.meta.env.VITE_LS_USER_DATA)
+    );
     let token = storedData?.token || false;
-
-    APP_DEBUG && console.log(`${API_URL}${endpoint}`);
 
     let headers = {
       Authorization: token ? `Bearer ${token}` : undefined,
@@ -26,7 +25,7 @@ const requestAxios = async (
 
     try {
       response = await axios({
-        url: `${API_URL}${endpoint}`,
+        url: `${import.meta.env.VITE_API_URL}${endpoint}`,
         method: method,
         data: method === "GET" ? undefined : JSON.stringify(body),
         headers,

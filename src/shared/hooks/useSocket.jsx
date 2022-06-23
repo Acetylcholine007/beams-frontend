@@ -1,10 +1,9 @@
 import { useEffect } from "react";
-import { API_URL } from "../../utils/constants";
 import io from "socket.io-client";
 
 export const useSocket = (channel, callback) => {
   useEffect(() => {
-    const socket = io(API_URL);
+    const socket = io(import.meta.env.VITE_API_URL);
     socket.on("connect", () => console.log(socket.id));
     socket.on("connect_error", () => {
       setTimeout(() => socket.connect(), 5000);

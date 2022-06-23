@@ -3,28 +3,51 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Checkbox,
   CircularProgress,
   Container,
-  FormControlLabel,
-  FormGroup,
-  Grid,
-  IconButton,
   Stack,
   TextField,
   Typography,
+  useTheme,
 } from "@mui/material";
-import React from "react";
-import { useNode } from "../../../controllers/nodeController";
+import React, { useEffect } from "react";
 import LineChart from "../../../shared/components/LineChart";
 import RealTimeChart from "../../../shared/components/RealTimeChart";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { useDispatch, useSelector } from "react-redux";
 import { DateTimePicker } from "@mui/x-date-pickers";
+import { useState } from "react";
+import { useSocket } from "../../../shared/hooks/useSocket";
+import { useNavigate } from "react-router-dom";
+import { fetchNode } from "../../../store/actions/dashboardActions";
 
 const NodeDetailsPage = () => {
-  const { readings, value, setValue } = useNode();
+  const { node, readings } = useSelector((state) => state.dashboard);
+  const [value, setValue] = useState(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const theme = useTheme();
+
+  useEffect(() => {
+    dispatch(fetchNode(node._id));
+  }, []);
+
+  const socketHandler = (data) => {
+    console.log(data);
+    // setReadings((readings) => {
+    //   let newReadings = [...readings];
+    //   console.log(newReadings);
+    //   if (newReadings.length === samples) {
+    //     newReadings.shift();
+    //   }
+    //   newReadings.push(data);
+    //   console.log(newReadings);
+    //   return newReadings;
+    // });
+  };
+
+  useSocket(node.serialKey, socketHandler);
 
   return (
     <Container sx={{ height: "100%" }}>
@@ -84,7 +107,9 @@ const NodeDetailsPage = () => {
               action={
                 <LocalizationProvider dateAdapter={AdapterLuxon}>
                   <DateTimePicker
-                    renderInput={(props) => <TextField {...props} />}
+                    renderInput={(props) => (
+                      <TextField size="small" {...props} />
+                    )}
                     label="DateTimePicker"
                     value={value}
                     onChange={(newValue) => {
@@ -174,7 +199,9 @@ const NodeDetailsPage = () => {
               action={
                 <LocalizationProvider dateAdapter={AdapterLuxon}>
                   <DateTimePicker
-                    renderInput={(props) => <TextField {...props} />}
+                    renderInput={(props) => (
+                      <TextField size="small" {...props} />
+                    )}
                     label="DateTimePicker"
                     value={value}
                     onChange={(newValue) => {
@@ -200,7 +227,7 @@ const NodeDetailsPage = () => {
                     { name: "Y", data: readings.fftY },
                     { name: "Z", data: readings.fftZ },
                   ]}
-                  xAxis={readings.fftDatetime}
+                  xAxis={[...Array(50).keys()]}
                 />
               )}{" "}
               {!readings && <CircularProgress sx={{ alignSelf: "center" }} />}

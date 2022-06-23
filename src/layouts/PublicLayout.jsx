@@ -17,21 +17,12 @@ import {
 } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
-import { Route, Routes, useNavigate } from "react-router-dom";
-import NodesPage from "../views/dashboardView/pages/NodesPage";
-import NodeDetailsPage from "../views/dashboardView/pages/NodeDetailsPage";
-import SettingsPage from "../views/settingsView/pages/SettingsPage";
-import NotFoundPage from "../shared/pages/NotFoundPage";
-import { SnackbarContext } from "../shared/contexts/SnackbarContext";
-import { LoadingContext } from "../shared/contexts/LoadingContext";
-import { styled, useTheme } from "@mui/material/styles";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Sensors,
-  Settings,
-  Menu,
-} from "@mui/icons-material";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { styled, useTheme, alpha } from "@mui/material/styles";
+import { feedbackActions } from "../store/slices/FeedbackSlice";
+import { ChevronLeft, ChevronRight, Menu } from "@mui/icons-material";
+import PublicRoutes, { publicRoutes } from "../routes/PublicRoutes";
 
 const drawerWidth = 240;
 
@@ -100,9 +91,10 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-function Layout() {
-  const { loadingParams } = useContext(LoadingContext);
-  const { snackbarParams, snackbarDispatch } = useContext(SnackbarContext);
+function PublicLayout() {
+  const dispatch = useDispatch();
+  const { firstname, lastname } = useSelector((state) => state.auth);
+  const feedbackParams = useSelector((state) => state.feedback);
   const [open, setOpen] = useState(false);
 
   const theme = useTheme();
@@ -114,6 +106,7 @@ function Layout() {
     setOpen(false);
   };
   const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -133,10 +126,10 @@ function Layout() {
             <Menu />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            MProject BEAMS
+            Project BEAMS
           </Typography>
         </Toolbar>
-        {loadingParams.isOpen && <LinearProgress />}
+        {feedbackParams.isLoading && <LinearProgress />}
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
@@ -146,14 +139,32 @@ function Layout() {
         </DrawerHeader>
         <Divider />
         <List>
-          <ListItemButton onClick={() => navigate("/")}>
-            <ListItem disablePadding sx={{ display: "block" }}>
+          {publicRoutes.map((route) => (
+            <ListItem
+              disablePadding
+              sx={{ display: "block" }}
+              key={route.title}
+            >
               <ListItemButton
+                onClick={() => navigate(route.path)}
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? "initial" : "center",
                   px: 2.5,
+                  "&.Mui-selected": {
+                    backgroundColor: (theme) =>
+                      alpha(theme.palette.primary.main, 0.3),
+                  },
+                  "&:hover": {
+                    backgroundColor: (theme) =>
+                      alpha(theme.palette.primary.main, 0.1),
+                  },
                 }}
+                selected={
+                  location.pathname === "/"
+                    ? location.pathname.startsWith(route.path)
+                    : location.pathname === route.path
+                }
               >
                 <ListItemIcon
                   sx={{
@@ -162,40 +173,15 @@ function Layout() {
                     justifyContent: "center",
                   }}
                 >
-                  <Sensors />
+                  {route.icon}
                 </ListItemIcon>
                 <ListItemText
-                  primary={"Nodes"}
+                  primary={route.title}
                   sx={{ opacity: open ? 1 : 0 }}
                 />
               </ListItemButton>
             </ListItem>
-          </ListItemButton>
-          <ListItemButton onClick={() => navigate("/settings")}>
-            <ListItem disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Settings />
-                </ListItemIcon>
-                <ListItemText
-                  primary={"Settings"}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </ListItemButton>
+          ))}
         </List>
       </Drawer>
       <Box
@@ -217,30 +203,23 @@ function Layout() {
             p: 3,
           }}
         >
-          <Routes>
-            <Route path="/" element={<NodesPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/:nodeId" element={<NodeDetailsPage />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
+          <PublicRoutes />
         </Box>
         <Snackbar
           anchorOrigin={{
-            vertical: snackbarParams.vertical,
-            horizontal: snackbarParams.horizontal,
+            vertical: "bottom",
+            horizontal: "center",
           }}
-          open={snackbarParams.isOpen}
-          autoHideDuration={snackbarParams.duration}
-          onClose={() => snackbarDispatch({ type: "SET_SHOW", payload: false })}
+          open={feedbackParams.isShowSnackbar}
+          autoHideDuration={feedbackParams.snackbarDuration}
+          onClose={() => dispatch(feedbackActions.closeNotification())}
         >
           <Alert
-            onClose={() =>
-              snackbarDispatch({ type: "SET_SHOW", payload: false })
-            }
-            severity={snackbarParams.severity}
+            onClose={() => dispatch(feedbackActions.closeNotification())}
+            severity={feedbackParams.severity}
             variant="filled"
           >
-            {snackbarParams.message}
+            {feedbackParams.snackbarMessage}
           </Alert>
         </Snackbar>
       </Box>
@@ -248,4 +227,4 @@ function Layout() {
   );
 }
 
-export default Layout;
+export default PublicLayout;
