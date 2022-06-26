@@ -1,9 +1,12 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import {
   Alert,
+  AppBar,
   Box,
+  Button,
   CssBaseline,
   Divider,
+  Drawer,
   IconButton,
   LinearProgress,
   List,
@@ -15,175 +18,155 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import MuiDrawer from "@mui/material/Drawer";
-import MuiAppBar from "@mui/material/AppBar";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { styled, useTheme, alpha } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 import { feedbackActions } from "../store/slices/FeedbackSlice";
-import { ChevronLeft, ChevronRight, Menu } from "@mui/icons-material";
-import PublicRoutes, { publicRoutes } from "../routes/PublicRoutes";
+import { AppRegistration, Login, Menu } from "@mui/icons-material";
+import PublicRoutes, {
+  publicRouteAuth,
+  publicRoutes,
+} from "../routes/PublicRoutes";
+import SigninPage from "../views/authView/pages/SigninPage";
+import RegisterPage from "../views/authView/pages/RegisterPage";
 
 const drawerWidth = 240;
 
-const openedMixin = (theme) => ({
-  width: drawerWidth,
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: "hidden",
-});
+function PublicLayout({ window }) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [isShowSignin, setShowSignin] = useState(false);
+  const [isShowRegister, setShowRegister] = useState(false);
 
-const closedMixin = (theme) => ({
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
-});
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
 
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-}));
+  const drawer = (
+    <Box
+      onClick={handleDrawerToggle}
+      sx={{
+        textAlign: "center",
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <Typography variant="h6" sx={{ my: 2 }}>
+        Project BEAMS
+      </Typography>
+      <Divider />
+      <List>
+        {publicRoutes.map((route) => (
+          <ListItem key={route.title} disablePadding>
+            <ListItemButton sx={{ textAlign: "left" }}>
+              <ListItemIcon>{route.icon}</ListItemIcon>
+              <ListItemText primary={route.title} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          flexGrow: 1,
+          justifyContent: "flex-end",
+        }}
+      >
+        <List>
+          <ListItem disablePadding>
+            <ListItemButton
+              sx={{ textAlign: "left" }}
+              onClick={() => setShowSignin(true)}
+            >
+              <ListItemIcon>
+                <Login />
+              </ListItemIcon>
+              <ListItemText primary="Sign In" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton
+              sx={{ textAlign: "left" }}
+              onClick={() => setShowRegister(true)}
+            >
+              <ListItemIcon>
+                <AppRegistration />
+              </ListItemIcon>
+              <ListItemText primary="Register" />
+            </ListItemButton>
+          </ListItem>
+        </List>
+      </div>
+    </Box>
+  );
 
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
+  const container =
+    window !== undefined ? () => window().document.body : undefined;
 
-const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  width: drawerWidth,
-  flexShrink: 0,
-  whiteSpace: "nowrap",
-  boxSizing: "border-box",
-  ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
-  }),
-  ...(!open && {
-    ...closedMixin(theme),
-    "& .MuiDrawer-paper": closedMixin(theme),
-  }),
-}));
-
-function PublicLayout() {
   const dispatch = useDispatch();
-  const { firstname, lastname } = useSelector((state) => state.auth);
   const feedbackParams = useSelector((state) => state.feedback);
   const [open, setOpen] = useState(false);
 
   const theme = useTheme();
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
   const navigate = useNavigate();
   const location = useLocation();
 
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar component="nav">
         <Toolbar>
           <IconButton
             color="inherit"
             aria-label="open drawer"
-            onClick={handleDrawerOpen}
             edge="start"
-            sx={{
-              marginRight: 5,
-              ...(open && { display: "none" }),
-            }}
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: "none" } }}
           >
             <Menu />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
+          >
             Project BEAMS
           </Typography>
+          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+            <Button sx={{ color: "#fff" }} onClick={() => setShowSignin(true)}>
+              Sign In
+            </Button>
+            <Button
+              sx={{ color: "#fff" }}
+              onClick={() => setShowRegister(true)}
+            >
+              Register
+            </Button>
+          </Box>
         </Toolbar>
         {feedbackParams.isLoading && <LinearProgress />}
       </AppBar>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? <ChevronRight /> : <ChevronLeft />}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {publicRoutes.map((route) => (
-            <ListItem
-              disablePadding
-              sx={{ display: "block" }}
-              key={route.title}
-            >
-              <ListItemButton
-                onClick={() => navigate(route.path)}
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                  "&.Mui-selected": {
-                    backgroundColor: (theme) =>
-                      alpha(theme.palette.primary.main, 0.3),
-                  },
-                  "&:hover": {
-                    backgroundColor: (theme) =>
-                      alpha(theme.palette.primary.main, 0.1),
-                  },
-                }}
-                selected={
-                  location.pathname === "/"
-                    ? location.pathname.startsWith(route.path)
-                    : location.pathname === route.path
-                }
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  {route.icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={route.title}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
+      <Box component="nav">
+        <Drawer
+          container={container}
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+          sx={{
+            display: { xs: "block", sm: "none" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+            },
+          }}
+        >
+          {drawer}
+        </Drawer>
+      </Box>
       <Box
         component="main"
         sx={{
@@ -193,7 +176,7 @@ function PublicLayout() {
           flexDirection: "column",
         }}
       >
-        <DrawerHeader />
+        <Toolbar />
         <Box
           sx={{
             flexGrow: 1,
@@ -222,6 +205,18 @@ function PublicLayout() {
             {feedbackParams.snackbarMessage}
           </Alert>
         </Snackbar>
+        <SigninPage
+          open={isShowSignin}
+          handleClose={() => {
+            setShowSignin(false);
+          }}
+        />
+        <RegisterPage
+          open={isShowRegister}
+          handleClose={() => {
+            setShowRegister(false);
+          }}
+        />
       </Box>
     </Box>
   );

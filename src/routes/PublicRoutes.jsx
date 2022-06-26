@@ -1,11 +1,10 @@
-import { Dashboard, Settings } from "@mui/icons-material";
+import { AppRegistration, Dashboard, Login } from "@mui/icons-material";
 import { Route, Routes } from "react-router-dom";
 
 import NotFoundPage from "../shared/pages/NotFoundPage";
 import HomePage from "../views/dashboardView/pages/HomePage";
 import NodeDetailsPage from "../views/dashboardView/pages/NodeDetailsPage";
 import NodesPage from "../views/dashboardView/pages/NodesPage";
-import SettingsPage from "../views/settingsView/pages/SettingsPage";
 
 const PublicRoutes = () => {
   return (
@@ -16,7 +15,6 @@ const PublicRoutes = () => {
         path="/structures/:structureId/nodes/:nodeId"
         element={<NodeDetailsPage />}
       />
-      <Route path="/settings" element={<SettingsPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
@@ -30,9 +28,17 @@ export const publicRoutes = [
     icon: <Dashboard />,
     path: "/",
   },
+];
+
+export const publicRouteAuth = [
   {
-    title: "Settings",
-    icon: <Settings />,
-    path: "/settings",
+    title: "Sign In",
+    icon: <Login />,
+    path: "/",
+  },
+  {
+    title: "Register",
+    icon: <AppRegistration />,
+    path: "/",
   },
 ];

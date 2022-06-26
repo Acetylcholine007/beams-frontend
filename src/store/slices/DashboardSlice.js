@@ -7,6 +7,16 @@ const dashboardSlice = createSlice({
     structure: null,
     node: null,
     readings: {},
+    realTimeRawReadings: [
+      { name: "X", data: [] },
+      { name: "Y", data: [] },
+      { name: "Z", data: [] },
+    ],
+    realTimeFFTReadings: [
+      { name: "X", data: [] },
+      { name: "Y", data: [] },
+      { name: "Z", data: [] },
+    ],
     structurePage: 1,
     nodePage: 1,
     structureTotalItems: 0,
@@ -23,6 +33,46 @@ const dashboardSlice = createSlice({
     },
     setReadings(state, action) {
       state.readings = action.payload;
+    },
+    setRealTimeRawReadings(state, action) {
+      if (state.realTimeRawReadings[0].data.length >= 500) {
+        state.realTimeRawReadings[0].data =
+          state.realTimeRawReadings[0].data.slice(400);
+        state.realTimeRawReadings[0].data = [
+          ...state.realTimeRawReadings[0].data,
+          ...action.payload.x,
+        ];
+        state.realTimeRawReadings[1].data =
+          state.realTimeRawReadings[1].data.slice(400);
+        state.realTimeRawReadings[1].data = [
+          ...state.realTimeRawReadings[1].data,
+          ...action.payload.y,
+        ];
+        state.realTimeRawReadings[2].data =
+          state.realTimeRawReadings[2].data.slice(400);
+        state.realTimeRawReadings[2].data = [
+          ...state.realTimeRawReadings[2].data,
+          ...action.payload.z,
+        ];
+      } else {
+        state.realTimeRawReadings[0].data = [
+          ...state.realTimeRawReadings[0].data,
+          ...action.payload.x,
+        ];
+        state.realTimeRawReadings[1].data = [
+          ...state.realTimeRawReadings[1].data,
+          ...action.payload.y,
+        ];
+        state.realTimeRawReadings[2].data = [
+          ...state.realTimeRawReadings[2].data,
+          ...action.payload.z,
+        ];
+      }
+    },
+    setRealTimeFFTReadings(state, action) {
+      state.realTimeFFTReadings[0].data = action.payload.x;
+      state.realTimeFFTReadings[1].data = action.payload.y;
+      state.realTimeFFTReadings[2].data = action.payload.z;
     },
     setStructurePagePage(state, action) {
       state.structurePage = action.payload;
