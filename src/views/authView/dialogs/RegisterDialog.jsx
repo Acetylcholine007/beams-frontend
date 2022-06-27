@@ -54,7 +54,7 @@ const reducer = (state, action) => {
   }
 };
 
-const RegisterPage = ({ open, handleClose }) => {
+const RegisterDialog = ({ open, handleClose }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [registerState, registerDispatch] = useReducer(reducer, initialState);
@@ -202,4 +202,4 @@ const RegisterPage = ({ open, handleClose }) => {
   );
 };
 
-export default RegisterPage;
+export default RegisterDialog;

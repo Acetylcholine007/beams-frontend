@@ -27,8 +27,9 @@ import PublicRoutes, {
   publicRouteAuth,
   publicRoutes,
 } from "../routes/PublicRoutes";
-import SigninPage from "../views/authView/pages/SigninPage";
-import RegisterPage from "../views/authView/pages/RegisterPage";
+import SigninPage from "../views/authView/dialogs/SignInDialog";
+import RegisterPage from "../views/authView/dialogs/RegisterDialog";
+import SignInDialog from "../views/authView/dialogs/SignInDialog";
 
 const drawerWidth = 240;
 
@@ -137,12 +138,6 @@ function PublicLayout({ window }) {
             <Button sx={{ color: "#fff" }} onClick={() => setShowSignin(true)}>
               Sign In
             </Button>
-            <Button
-              sx={{ color: "#fff" }}
-              onClick={() => setShowRegister(true)}
-            >
-              Register
-            </Button>
           </Box>
         </Toolbar>
         {feedbackParams.isLoading && <LinearProgress />}
@@ -174,6 +169,7 @@ function PublicLayout({ window }) {
           height: "100vh",
           display: "flex",
           flexDirection: "column",
+          zIndex: 0,
         }}
       >
         <Toolbar />
@@ -183,7 +179,6 @@ function PublicLayout({ window }) {
             overflow: "auto",
             display: "flex",
             flexDirection: "column",
-            p: 3,
           }}
         >
           <PublicRoutes />
@@ -218,6 +213,10 @@ function PublicLayout({ window }) {
           }}
         />
       </Box>
+      <SignInDialog
+        open={isShowSignin}
+        handleClose={() => setShowSignin(false)}
+      />
     </Box>
   );
 }

@@ -4,13 +4,13 @@ import { Route, Routes } from "react-router-dom";
 import NotFoundPage from "../shared/pages/NotFoundPage";
 import HomePage from "../views/dashboardView/pages/HomePage";
 import NodeDetailsPage from "../views/dashboardView/pages/NodeDetailsPage";
-import NodesPage from "../views/dashboardView/pages/NodesPage";
+import StructurePage from "../views/dashboardView/pages/StructurePage";
 
 const PublicRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/structures/:structureId" element={<NodesPage />} />
+      <Route path="/structures/:structureId" element={<StructurePage />} />
       <Route
         path="/structures/:structureId/nodes/:nodeId"
         element={<NodeDetailsPage />}

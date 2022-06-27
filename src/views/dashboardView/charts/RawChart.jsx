@@ -1,17 +1,11 @@
 import {
   Card,
-  CardActions,
   CardContent,
   CardHeader,
   CircularProgress,
   Grid,
-  Slider,
-  TextField,
   Typography,
 } from "@mui/material";
-import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import React from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import LineChart from "../../../shared/components/LineChart";
@@ -19,7 +13,6 @@ import RealTimeRawChart from "../../../shared/components/RealTimeRawChart";
 
 const RawChart = () => {
   const { readings } = useSelector((state) => state.dashboard);
-  const [datetime, setDatetime] = useState();
 
   return (
     <>
@@ -70,21 +63,6 @@ const RawChart = () => {
               </Typography>
             }
             sx={{ backgroundColor: "primary.main" }}
-            action={
-              <>
-                <LocalizationProvider dateAdapter={AdapterLuxon}>
-                  <DateTimePicker
-                    renderInput={(props) => (
-                      <TextField size="small" {...props} />
-                    )}
-                    value={datetime}
-                    onChange={(newValue) => {
-                      setDatetime(newValue);
-                    }}
-                  />
-                </LocalizationProvider>
-              </>
-            }
           />
           <CardContent
             sx={{
@@ -107,16 +85,6 @@ const RawChart = () => {
             )}
             {!readings && <CircularProgress sx={{ alignSelf: "center" }} />}
           </CardContent>
-          <CardActions>
-            <Slider
-              defaultValue={10}
-              step={1}
-              marks
-              min={0}
-              max={59}
-              valueLabelDisplay="auto"
-            />
-          </CardActions>
         </Card>
       </Grid>
     </>

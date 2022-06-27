@@ -70,17 +70,6 @@ const FFTChart = () => {
               </Typography>
             }
             sx={{ backgroundColor: "primary.main" }}
-            action={
-              <LocalizationProvider dateAdapter={AdapterLuxon}>
-                <DateTimePicker
-                  renderInput={(props) => <TextField size="small" {...props} />}
-                  value={datetime}
-                  onChange={(newValue) => {
-                    setDatetime(newValue);
-                  }}
-                />
-              </LocalizationProvider>
-            }
           />
           <CardContent
             sx={{
@@ -103,16 +92,6 @@ const FFTChart = () => {
             )}{" "}
             {!readings && <CircularProgress sx={{ alignSelf: "center" }} />}
           </CardContent>
-          <CardActions>
-            <Slider
-              defaultValue={10}
-              step={1}
-              marks
-              min={0}
-              max={59}
-              valueLabelDisplay="auto"
-            />
-          </CardActions>
         </Card>
       </Grid>
     </>

@@ -50,7 +50,7 @@ const reducer = (state, action) => {
   }
 };
 
-const SigninPage = ({ open, handleClose, saveHandler }) => {
+const SignInDialog = ({ open, handleClose, saveHandler }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { tokenExpirationDate } = useSelector((state) => state.auth);
@@ -64,7 +64,7 @@ const SigninPage = ({ open, handleClose, saveHandler }) => {
       onClose={handleClose}
       aria-labelledby="responsive-dialog-title"
     >
-      <DialogTitle id="responsive-dialog-title">Sign In</DialogTitle>
+      <DialogTitle align='center'>Sign In</DialogTitle>
       <DialogContent>
         <Stack
           component="form"
@@ -73,9 +73,9 @@ const SigninPage = ({ open, handleClose, saveHandler }) => {
           autoComplete="off"
           alignItems="center"
           justifyContent="center"
+          sx={{ paddingTop: 2 }}
         >
           <TextField
-            id="email"
             label="Email"
             type="email"
             variant="outlined"
@@ -93,7 +93,6 @@ const SigninPage = ({ open, handleClose, saveHandler }) => {
             }}
           />
           <TextField
-            id="password"
             label="Password"
             type={signinState.isShowPassword ? "text" : "password"}
             variant="outlined"
@@ -183,4 +182,4 @@ const SigninPage = ({ open, handleClose, saveHandler }) => {
   );
 };
 
-export default SigninPage;
+export default SignInDialog;

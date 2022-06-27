@@ -17,6 +17,8 @@ const dashboardSlice = createSlice({
       { name: "Y", data: [] },
       { name: "Z", data: [] },
     ],
+    seconds: 0,
+    datetime: null,
     structurePage: 1,
     nodePage: 1,
     structureTotalItems: 0,
@@ -32,7 +34,15 @@ const dashboardSlice = createSlice({
       state.structureTotalItems = action.payload.totalItems;
     },
     setReadings(state, action) {
-      state.readings = action.payload;
+      state.readings = action.payload.readings;
+      state.datetime = action.payload.datetime;
+      state.seconds = action.payload.seconds;
+    },
+    setDatetime(state, action) {
+      state.datetime = action.payload;
+    },
+    setSeconds(state, action) {
+      state.seconds = action.payload;
     },
     setRealTimeRawReadings(state, action) {
       if (state.realTimeRawReadings[0].data.length >= 500) {
