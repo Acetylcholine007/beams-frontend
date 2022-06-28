@@ -29,6 +29,8 @@ import React, { useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import PasswordResetDialog from "../components/PasswordResetDialog";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { authActions } from "../../../store/slices/AuthSlice";
 
 const initialState = {
   email: "",
@@ -60,6 +62,14 @@ const SigninPage = () => {
   const navigate = useNavigate();
   const { tokenExpirationDate } = useSelector((state) => state.auth);
   const [signinState, signinDispatch] = useReducer(reducer, initialState);
+  const { isShowResendVerification, isShowPasswordResetDialog } = useSelector(
+    (state) => state.auth
+  );
+
+  useEffect(
+    () => () => dispatch(authActions.setShowResendVerification(false)),
+    []
+  );
 
   return (
     <Box
@@ -165,12 +175,12 @@ const SigninPage = () => {
               <Button
                 variant="text"
                 onClick={() =>
-                  signinDispatch({ type: "showPasswordReset", payload: true })
+                  dispatch(authActions.setShowPasswordResetDialog(true))
                 }
               >
                 Forgot Password?
               </Button>
-              {signinState.isShowResendVerification && (
+              {isShowResendVerification && (
                 <Button
                   variant="text"
                   onClick={() => dispatch(verify(signinState.email))}
@@ -190,9 +200,9 @@ const SigninPage = () => {
             </Stack>
           </CardContent>
           <PasswordResetDialog
-            open={signinState.isShowPasswordReset}
+            open={isShowPasswordResetDialog}
             handleClose={() =>
-              signinDispatch({ type: "showPasswordReset", payload: false })
+              dispatch(authActions.setShowPasswordResetDialog(false))
             }
             handleSubmit={(email) => dispatch(resetPassword(email))}
           />

@@ -34,6 +34,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Business, Foundation, Search, Sensors } from "@mui/icons-material";
 
 const NodeDetailsPage = () => {
+  const { token } = useSelector((state) => state.auth);
   const { snapshots, structure, node, datetime, seconds } = useSelector(
     (state) => state.dashboard
   );
@@ -184,26 +185,30 @@ const NodeDetailsPage = () => {
               />
             </Stack>
           </Stack>
-          <Divider
-            orientation="vertical"
-            flexItem
-            sx={{ marginLeft: 2, marginRight: 2 }}
-          />
-          <Button
-            variant="contained"
-            sx={{ minWidth: "8rem" }}
-            onClick={() => setShowDialog(true)}
-          >
-            Edit Node
-          </Button>
-          <Button
-            variant="contained"
-            sx={{ minWidth: "8rem", marginLeft: 2 }}
-            color="error"
-            onClick={() => dispatch(deleteNode(node._id, navigate))}
-          >
-            Delete Node
-          </Button>
+          {token && (
+            <>
+              <Divider
+                orientation="vertical"
+                flexItem
+                sx={{ marginLeft: 2, marginRight: 2 }}
+              />
+              <Button
+                variant="contained"
+                sx={{ minWidth: "8rem" }}
+                onClick={() => setShowDialog(true)}
+              >
+                Edit Node
+              </Button>
+              <Button
+                variant="contained"
+                sx={{ minWidth: "8rem", marginLeft: 2 }}
+                color="error"
+                onClick={() => dispatch(deleteNode(node._id, navigate))}
+              >
+                Delete Node
+              </Button>
+            </>
+          )}
         </Toolbar>
       </AppBar>
       <Box sx={{ p: 2, overflowY: "auto", flexGrow: 1 }}>

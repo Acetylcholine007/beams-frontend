@@ -4,6 +4,7 @@ import {
   AppBar,
   Box,
   Button,
+  ButtonBase,
   CssBaseline,
   Divider,
   Drawer,
@@ -52,7 +53,7 @@ function PublicLayout({ window }) {
       </Typography>
       <Divider />
       <List>
-        {publicRoutes.map((route) => (
+        {publicRoutes.slice(0, -2).map((route) => (
           <ListItem key={route.title} disablePadding>
             <ListItemButton sx={{ textAlign: "left" }}>
               <ListItemIcon>{route.icon}</ListItemIcon>
@@ -122,13 +123,16 @@ function PublicLayout({ window }) {
           >
             <Menu />
           </IconButton>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
-          >
-            Project BEAMS
-          </Typography>
+          <ButtonBase onClick={() => navigate("/")} sx={{ p: 1 }}>
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ display: { xs: "none", sm: "block" } }}
+            >
+              Project BEAMS
+            </Typography>
+          </ButtonBase>
+          <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             <Button sx={{ color: "#fff" }} onClick={() => navigate("/signin")}>
               Sign In

@@ -62,7 +62,14 @@ export const signup = (user, navigate) => {
     const response = await AuthAPI.signup(user);
     dispatch(feedbackActions.setLoading(false));
     if (response.status === 200) {
-      navigate("/signin", { state: { toVerify: true } });
+      navigate("/signin");
+      dispatch(
+        feedbackActions.setNotification({
+          snackbarMessage: "Email verification link was sent into your mail",
+          isShowSnackbar: true,
+          severity: "warning",
+        })
+      );
     } else {
       dispatch(
         feedbackActions.setNotification({
@@ -78,7 +85,7 @@ export const signup = (user, navigate) => {
 export const logout = (navigate) => {
   return async (dispatch) => {
     dispatch(authActions.setData({}));
-    localStorage.removeItem(import.meta.env.LS_USER_DATA);
+    localStorage.removeItem(import.meta.env.VITE_LS_USER_DATA);
     navigate("/");
   };
 };

@@ -25,6 +25,12 @@ const authSlice = createSlice({
       state.firstname = action.payload.firstname;
       state.lastname = action.payload.lastname;
     },
+    setShowResendVerification(state, action) {
+      state.isShowResendVerification = action.payload;
+    },
+    setShowPasswordResetDialog(state, action) {
+      state.isShowPasswordResetDialog = action.payload;
+    },
   },
 });
 

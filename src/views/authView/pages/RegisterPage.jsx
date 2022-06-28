@@ -177,7 +177,7 @@ const RegisterPage = ({ open, handleClose }) => {
                       <IconButton
                         onClick={() =>
                           registerDispatch({
-                            type: "isShowPassword",
+                            type: "showPassword",
                             payload: !registerState.isShowPassword,
                           })
                         }
