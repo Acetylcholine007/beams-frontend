@@ -1,25 +1,18 @@
 import {
   Card,
-  CardActions,
   CardContent,
   CardHeader,
   CircularProgress,
   Grid,
-  Slider,
-  TextField,
   Typography,
 } from "@mui/material";
-import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import React from "react";
-import { useState } from "react";
 import { useSelector } from "react-redux";
-import LineChart from "../../../shared/components/LineChart";
+import FrequencyChart from "../../../shared/components/FrequencyChart";
 import RealTimeFFTChart from "../../../shared/components/RealTimeFFTChart";
 
 const FFTChart = () => {
-  const { readings } = useSelector((state) => state.dashboard);
-  const [datetime, setDatetime] = useState();
+  const { readings, seconds } = useSelector((state) => state.dashboard);
 
   return (
     <>
@@ -80,16 +73,26 @@ const FFTChart = () => {
               alignItems: "stretch",
             }}
           >
-            {readings && (
-              <LineChart
+            {readings[seconds] && (
+              <FrequencyChart
                 data={[
-                  { name: "X", data: readings.fftX },
-                  { name: "Y", data: readings.fftY },
-                  { name: "Z", data: readings.fftZ },
+                  { name: "X", data: readings[seconds].fftX },
+                  { name: "Y", data: readings[seconds].fftY },
+                  { name: "Z", data: readings[seconds].fftZ },
                 ]}
-                xAxis={[...Array(50).keys()]}
+                xAxis={readings[seconds].fftFrequency}
               />
-            )}{" "}
+            )}
+            {!readings[seconds] && (
+              <FrequencyChart
+                data={[
+                  { name: "X", data: [] },
+                  { name: "Y", data: [] },
+                  { name: "Z", data: [] },
+                ]}
+                xAxis={[]}
+              />
+            )}
             {!readings && <CircularProgress sx={{ alignSelf: "center" }} />}
           </CardContent>
         </Card>

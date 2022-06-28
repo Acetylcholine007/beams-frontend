@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 const TIME_RANGE_IN_MILLISECONDS = 1 * 1000;
 const ADDING_DATA_INTERVAL_IN_MILLISECONDS = 1000;
 const CYCLES = 5;
+const categories = [...Array(10).keys()].map((value) => `${value} Hz`);
 
 const RealTimeFFTChart = () => {
   const { realTimeFFTReadings } = useSelector((state) => state.dashboard);
@@ -21,20 +22,15 @@ const RealTimeFFTChart = () => {
         },
       },
     },
-    tooltip: {
-      x: {
-        // format: "HH:mm:ss.f",
-      },
-    },
     xaxis: {
       type: "numeric",
-      range: 50,
+      range: 50
     },
     yaxis: {
       labels: {
         formatter: (val) => val.toFixed(0),
       },
-      title: { text: "Value" },
+      title: { text: "Amplitude" },
     },
     stroke: {
       curve: "smooth",

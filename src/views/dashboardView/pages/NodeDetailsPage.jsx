@@ -7,6 +7,7 @@ import {
   Container,
   Divider,
   Grid,
+  IconButton,
   Slider,
   Stack,
   TextField,
@@ -18,7 +19,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { useSocket } from "../../../shared/hooks/useSocket";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { deleteNode, fetchNode } from "../../../store/actions/dashboardActions";
+import {
+  deleteNode,
+  fetchNode,
+  fetchReadings,
+} from "../../../store/actions/dashboardActions";
 import { emphasize, styled } from "@mui/material/styles";
 import RawChart from "../charts/RawChart";
 import FFTChart from "../charts/FFTChart";
@@ -26,12 +31,11 @@ import { dashboardActions } from "../../../store/slices/DashboardSlice";
 import NodeEditorDialog from "../components/NodeEditorDialog";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Business, Foundation, Sensors, Timer } from "@mui/icons-material";
+import { Business, Foundation, Search, Sensors } from "@mui/icons-material";
 
 const NodeDetailsPage = () => {
-  const { structure, node, datetime, seconds } = useSelector(
-    (state) => state.dashboard
-  );
+  const { snapshots, structure, node, datetime, seconds } =
+    useSelector((state) => state.dashboard);
   const [isShowDialog, setShowDialog] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -56,8 +60,15 @@ const NodeDetailsPage = () => {
     };
   });
 
+  // useEffect(() => {
+  //   if (isReadingsInitialized) {
+  //     dispatch(fetchReadings(datetime, node.serialKey));
+  //   }
+  // }, [datetime]);
+
   useEffect(() => {
     dispatch(fetchNode(node._id));
+    return () => dispatch(dashboardActions.setInitialized(false));
   }, []);
 
   const socketHandler = (data) => {
@@ -125,6 +136,16 @@ const NodeDetailsPage = () => {
               icon={<Sensors fontSize="small" />}
             />
           </Breadcrumbs>
+          <IconButton
+            onClick={() => {
+              if (new Date(datetime) !== "Invalid Date") {
+                console.log(datetime)
+                dispatch(fetchReadings(datetime, node.serialKey));
+              }
+            }}
+          >
+            <Search />
+          </IconButton>
           <Stack alignItems="center">
             <LocalizationProvider dateAdapter={AdapterLuxon}>
               <DateTimePicker
@@ -142,14 +163,16 @@ const NodeDetailsPage = () => {
                 }}
               />
             </LocalizationProvider>
-            <Stack direction="row" alignItems="center" sx={{width: '100%'}}>
-              <Typography variant='caption' sx={{paddingRight: '0.6rem'}}>Seconds: </Typography>
+            <Stack direction="row" alignItems="center" sx={{ width: "100%" }}>
+              <Typography variant="caption" sx={{ paddingRight: "0.6rem" }}>
+                Snapshots:{" "}
+              </Typography>
               {/* <Timer sx={{ transform: "scale(0.8)", marginRight: '0.5rem' }} /> */}
               <Slider
                 step={1}
                 marks
                 min={0}
-                max={59}
+                max={snapshots}
                 value={seconds}
                 onChange={(e, val) =>
                   dispatch(dashboardActions.setSeconds(val))

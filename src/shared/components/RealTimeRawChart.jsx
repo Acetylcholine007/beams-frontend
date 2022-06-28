@@ -21,6 +21,13 @@ const RealTimeRawChart = () => {
         },
       },
     },
+    // xaxis: {
+    //   categories: xAxis.map((stamp) =>
+    //     DateTime.fromISO(stamp)
+    //       .setZone("Asia/Manila")
+    //       .toFormat("ss' sec. 'SSS' ms.'")
+    //   ),
+    // },
     tooltip: {
       x: {
         format: "HH:mm:ss.f",
@@ -29,12 +36,15 @@ const RealTimeRawChart = () => {
     xaxis: {
       type: "datetime",
       range: TIME_RANGE_IN_MILLISECONDS,
+      labels: {
+        format: 'dd/MM',
+      }
     },
     yaxis: {
       labels: {
         formatter: (val) => val.toFixed(0),
       },
-      title: { text: "Value" },
+      title: { text: "Amplitude" },
     },
     stroke: {
       curve: "smooth",

@@ -3,10 +3,11 @@ import { createSlice } from "@reduxjs/toolkit";
 const dashboardSlice = createSlice({
   name: "dashboard",
   initialState: {
+    isReadingsInitialized: false,
     structures: null,
     structure: null,
     node: null,
-    readings: {},
+    readings: [],
     realTimeRawReadings: [
       { name: "X", data: [] },
       { name: "Y", data: [] },
@@ -18,6 +19,7 @@ const dashboardSlice = createSlice({
       { name: "Z", data: [] },
     ],
     seconds: 0,
+    snapshots: 60,
     datetime: null,
     structurePage: 1,
     nodePage: 1,
@@ -29,6 +31,15 @@ const dashboardSlice = createSlice({
     nodeQueryTarget: "name",
   },
   reducers: {
+    initializeReadings(state, action) {
+      state.readings = action.payload.readings;
+      state.datetime = action.payload.datetime;
+      state.seconds = action.payload.seconds;
+      state.snapshots = action.payload.readings.length;
+    },
+    setInitialized(state, action) {
+      state.isReadingsInitialized = action.payload;
+    },
     setStructures(state, action) {
       state.structures = action.payload.structures;
       state.structureTotalItems = action.payload.totalItems;
@@ -37,8 +48,10 @@ const dashboardSlice = createSlice({
       state.readings = action.payload.readings;
       state.datetime = action.payload.datetime;
       state.seconds = action.payload.seconds;
+      state.snapshots = action.payload.readings.length;
     },
     setDatetime(state, action) {
+      // state.isReadingsInitialized = true;
       state.datetime = action.payload;
     },
     setSeconds(state, action) {
@@ -89,12 +102,6 @@ const dashboardSlice = createSlice({
     },
     setNodePage(state, action) {
       state.nodePage = action.payload;
-    },
-    setStructureTotalItems(state, action) {
-      state.structureTotalItems = action.payload;
-    },
-    setNodeTotalItems(state, action) {
-      state.nodeTotalItems = action.payload;
     },
     setStructureQuery(state, action) {
       state.structureQuery = action.payload;

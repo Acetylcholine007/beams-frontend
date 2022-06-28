@@ -3,6 +3,7 @@ import NodeAPI from "../../shared/apis/NodeAPI";
 import { dashboardActions } from "../slices/DashboardSlice";
 import { feedbackActions } from "../slices/FeedbackSlice";
 import ReadingAPI from "../../shared/apis/ReadingAPI";
+import { DateTime } from "luxon";
 
 export const fetchStructures = (query, page, queryTarget) => {
   return async (dispatch) => {
@@ -28,39 +29,27 @@ export const fetchStructures = (query, page, queryTarget) => {
   };
 };
 
-export const fetchReadings = (datetime) => {
+export const fetchReadings = (datetime, serialKey) => {
   return async (dispatch) => {
     dispatch(feedbackActions.setLoading(true));
-    const response = await ReadingAPI.getReading(datetime);
+    const jsDate = new Date(datetime);
+    const response = await ReadingAPI.getReading(
+      jsDate.toISOString(),
+      serialKey
+    );
     dispatch(feedbackActions.setLoading(false));
     if (response.status === 200) {
-      const newReadings =
-        response.readings.length !== 0
-          ? response.readings.reduce((a, b) => ({
-              rawX: [...a.rawX, ...b.rawX],
-              rawY: [...a.rawY, ...b.rawY],
-              rawZ: [...a.rawZ, ...b.rawZ],
-              fftX: [...a.fftX, ...b.fftX],
-              fftY: [...a.fftY, ...b.fftY],
-              fftZ: [...a.fftZ, ...b.fftZ],
-              rawDatetime: [...a.rawDatetime, ...b.rawDatetime],
-              fftFrequency: [...a.fftFrequency, ...b.fftFrequency],
-            }))
-          : {
-              rawX: [],
-              rawY: [],
-              rawZ: [],
-              fftX: [],
-              fftY: [],
-              fftZ: [],
-              rawDatetime: [],
-              fftFrequency: [],
-            };
+      console.log(response.readings)
+      let datetime = null;
+      if (response.readings.length !== 0) {
+        const jsDatetime = new Date(response.readings[0].rawDatetime[0]);
+        datetime = DateTime.fromJSDate(jsDatetime);
+      }
       dispatch(
         dashboardActions.setReadings({
-          readings: newReadings,
+          readings: response.readings,
           seconds: 0,
-          datetime: null,
+          datetime,
         })
       );
     } else {
@@ -81,33 +70,16 @@ export const fetchNode = (nodeId) => {
     const response = await NodeAPI.getNode(nodeId);
     dispatch(feedbackActions.setLoading(false));
     if (response.status === 200) {
-      const newReadings =
-        response.readings.length !== 0
-          ? response.readings.reduce((a, b) => ({
-              rawX: [...a.rawX, ...b.rawX],
-              rawY: [...a.rawY, ...b.rawY],
-              rawZ: [...a.rawZ, ...b.rawZ],
-              fftX: [...a.fftX, ...b.fftX],
-              fftY: [...a.fftY, ...b.fftY],
-              fftZ: [...a.fftZ, ...b.fftZ],
-              rawDatetime: [...a.rawDatetime, ...b.rawDatetime],
-              fftFrequency: [...a.fftFrequency, ...b.fftFrequency],
-            }))
-          : {
-              rawX: [],
-              rawY: [],
-              rawZ: [],
-              fftX: [],
-              fftY: [],
-              fftZ: [],
-              rawDatetime: [],
-              fftFrequency: [],
-            };
+      let datetime = null;
+      if (response.readings.length !== 0) {
+        const jsDatetime = new Date(response.readings[0].rawDatetime[0]);
+        datetime = DateTime.fromJSDate(jsDatetime);
+      }
       dispatch(
-        dashboardActions.setReadings({
-          readings: newReadings,
+        dashboardActions.initializeReadings({
+          readings: response.readings,
           seconds: 0,
-          datetime: null,
+          datetime,
         })
       );
     } else {

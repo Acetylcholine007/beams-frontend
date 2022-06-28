@@ -6,13 +6,12 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
 import { useSelector } from "react-redux";
 import LineChart from "../../../shared/components/LineChart";
 import RealTimeRawChart from "../../../shared/components/RealTimeRawChart";
 
 const RawChart = () => {
-  const { readings } = useSelector((state) => state.dashboard);
+  const { readings, seconds } = useSelector((state) => state.dashboard);
 
   return (
     <>
@@ -73,14 +72,24 @@ const RawChart = () => {
               alignItems: "stretch",
             }}
           >
-            {readings && (
+            {readings[seconds] && (
               <LineChart
                 data={[
-                  { name: "X", data: readings.rawX },
-                  { name: "Y", data: readings.rawY },
-                  { name: "Z", data: readings.rawZ },
+                  { name: "X", data: readings[seconds].rawX },
+                  { name: "Y", data: readings[seconds].rawY },
+                  { name: "Z", data: readings[seconds].rawZ },
                 ]}
-                xAxis={readings.rawDatetime}
+                xAxis={readings[seconds].rawDatetime}
+              />
+            )}
+            {!readings[seconds] && (
+              <LineChart
+                data={[
+                  { name: "X", data: [] },
+                  { name: "Y", data: [] },
+                  { name: "Z", data: [] },
+                ]}
+                xAxis={[]}
               />
             )}
             {!readings && <CircularProgress sx={{ alignSelf: "center" }} />}
