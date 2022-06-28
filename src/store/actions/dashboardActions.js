@@ -39,7 +39,7 @@ export const fetchReadings = (datetime, serialKey) => {
     );
     dispatch(feedbackActions.setLoading(false));
     if (response.status === 200) {
-      console.log(response.readings)
+      console.log(response.readings);
       let datetime = null;
       if (response.readings.length !== 0) {
         const jsDatetime = new Date(response.readings[0].rawDatetime[0]);
@@ -94,12 +94,36 @@ export const fetchNode = (nodeId) => {
   };
 };
 
-export const saveNode = () => {
+export const saveNode = (isNew, node) => {
   return async (dispatch) => {
     dispatch(feedbackActions.setLoading(true));
-    const response = await NodeAPI.getNode(nodeId);
+    let response;
+    if (isNew) {
+      response = await NodeAPI.postNode(node);
+    } else {
+      response = await NodeAPI.patchNode(node._id, node);
+    }
     dispatch(feedbackActions.setLoading(false));
     if (response.status === 200) {
+      if (isNew) {
+        dispatch(dashboardActions.addNode(response.node));
+        dispatch(
+          feedbackActions.setNotification({
+            snackbarMessage: "Node added",
+            isShowSnackbar: true,
+            severity: "success",
+          })
+        );
+      } else {
+        dispatch(dashboardActions.editNode(response.node));
+        dispatch(
+          feedbackActions.setNotification({
+            snackbarMessage: "Node edited",
+            isShowSnackbar: true,
+            severity: "success",
+          })
+        );
+      }
     } else {
       dispatch(
         feedbackActions.setNotification({
@@ -115,11 +139,18 @@ export const saveNode = () => {
 export const deleteNode = (nodeId, navigate) => {
   return async (dispatch) => {
     dispatch(feedbackActions.setLoading(true));
-    const response = await NodeAPI.getNode(nodeId);
+    const response = await NodeAPI.deleteNode(nodeId);
     dispatch(feedbackActions.setLoading(false));
     if (response.status === 200) {
       navigate(-1);
-      dispatch(dashboardActions.setSelectedNode(null));
+      dispatch(dashboardActions.deleteNode(nodeId));
+      dispatch(
+        feedbackActions.setNotification({
+          snackbarMessage: "Node deleted",
+          isShowSnackbar: true,
+          severity: "success",
+        })
+      );
     } else {
       dispatch(
         feedbackActions.setNotification({
@@ -132,12 +163,37 @@ export const deleteNode = (nodeId, navigate) => {
   };
 };
 
-export const saveStructure = () => {
+export const saveStructure = (isNew, structure, navigate) => {
   return async (dispatch) => {
     dispatch(feedbackActions.setLoading(true));
-    const response = await NodeAPI.getNode(nodeId);
+    let response;
+    if (isNew) {
+      response = await StructureAPI.createStructure(structure);
+    } else {
+      response = await StructureAPI.patchStructure(structure._id, structure);
+    }
     dispatch(feedbackActions.setLoading(false));
     if (response.status === 200) {
+      if (isNew) {
+        dispatch(fetchStructures("", 1, "name"));
+        navigate("/");
+        dispatch(
+          feedbackActions.setNotification({
+            snackbarMessage: "Structure added",
+            isShowSnackbar: true,
+            severity: "success",
+          })
+        );
+      } else {
+        dispatch(dashboardActions.editStructure(response.structure));
+        dispatch(
+          feedbackActions.setNotification({
+            snackbarMessage: "Structure edited",
+            isShowSnackbar: true,
+            severity: "success",
+          })
+        );
+      }
     } else {
       dispatch(
         feedbackActions.setNotification({
@@ -157,7 +213,13 @@ export const deleteStructure = (structureId, navigate) => {
     dispatch(feedbackActions.setLoading(false));
     if (response.status === 200) {
       navigate(-1);
-      dispatch(dashboardActions.setSelectedStructure(null));
+      dispatch(
+        feedbackActions.setNotification({
+          snackbarMessage: "Structure deleted",
+          isShowSnackbar: true,
+          severity: "success",
+        })
+      );
     } else {
       dispatch(
         feedbackActions.setNotification({

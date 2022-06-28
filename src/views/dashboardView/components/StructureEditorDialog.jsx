@@ -7,30 +7,34 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Stack,
-  TextField,
-} from "@mui/material";
-import { saveNode } from "../../../store/actions/dashboardActions";
+import { Box, CardActionArea, Stack, TextField, Tooltip } from "@mui/material";
+import { saveStructure } from "../../../store/actions/dashboardActions";
+import ImagePickerDialog from "../../../shared/components/ImagePickerDialog";
+import { useNavigate } from "react-router-dom";
 
 export default function StructureEditorDialog({ open, handleClose }) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [location, setLocation] = useState("");
   const [imageUri, setImageUri] = useState("");
+  const [isShowImagePicker, setShowImagePicker] = useState(false);
   const { structure } = useSelector((state) => state.dashboard);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (structure) {
       setName(structure.name);
       setDescription(structure.description);
-      setImageUri(structure.imagesUri);
+      setLocation(structure.location);
+      setImageUri(structure.imageUri);
     } else {
       setName("");
       setDescription("");
-      setImageUri([]);
+      setLocation("");
+      setImageUri("");
     }
   }, [open]);
 
@@ -44,8 +48,26 @@ export default function StructureEditorDialog({ open, handleClose }) {
       aria-labelledby="responsive-dialog-title"
     >
       <DialogTitle id="responsive-dialog-title">Structure Editor</DialogTitle>
+      <Tooltip title="Structure Image">
+        <CardActionArea onClick={() => setShowImagePicker(true)}>
+          <Box
+            sx={{
+              height: "10rem",
+              position: "relative",
+              backgroundColor: theme.palette.primary.dark,
+              backgroundSize: imageUri !== "" ? "cover" : "initial",
+              backgroundImage:
+                imageUri !== ""
+                  ? `url(${imageUri})`
+                  : `url(
+                "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 200 200'%3E%3Cdefs%3E%3ClinearGradient id='a' gradientUnits='userSpaceOnUse' x1='100' y1='33' x2='100' y2='-3'%3E%3Cstop offset='0' stop-color='%23000' stop-opacity='0'/%3E%3Cstop offset='1' stop-color='%23000' stop-opacity='1'/%3E%3C/linearGradient%3E%3ClinearGradient id='b' gradientUnits='userSpaceOnUse' x1='100' y1='135' x2='100' y2='97'%3E%3Cstop offset='0' stop-color='%23000' stop-opacity='0'/%3E%3Cstop offset='1' stop-color='%23000' stop-opacity='1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='%233f93d1' fill-opacity='0.6'%3E%3Crect x='100' width='100' height='100'/%3E%3Crect y='100' width='100' height='100'/%3E%3C/g%3E%3Cg fill-opacity='0.5'%3E%3Cpolygon fill='url(%23a)' points='100 30 0 0 200 0'/%3E%3Cpolygon fill='url(%23b)' points='100 100 0 130 0 100 200 100 200 130'/%3E%3C/g%3E%3C/svg%3E"
+              )`,
+            }}
+          />
+        </CardActionArea>
+      </Tooltip>
       <DialogContent>
-        <Stack spacing={2} sx={{paddingTop: 2}}>
+        <Stack spacing={2} sx={{ paddingTop: 2 }}>
           <TextField
             label="Structure Name"
             type="text"
@@ -67,19 +89,34 @@ export default function StructureEditorDialog({ open, handleClose }) {
             helperText={false ? "Structure description required" : null}
           />
           <TextField
-            label="Structure Image URI"
+            label="Structure Location"
             type="text"
             variant="outlined"
-            onChange={(e) => setImageUri(e.target.value)}
-            value={imageUri}
+            onChange={(e) => setLocation(e.target.value)}
+            value={location}
             fullWidth={true}
+            error={false}
+            helperText={false ? "Structure location required" : null}
           />
         </Stack>
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ justifyContent: "center" }}>
         <Button
+          variant="contained"
           onClick={() => {
-            dispatch(saveNode());
+            dispatch(
+              saveStructure(
+                structure === null,
+                {
+                  _id: structure ? structure._id : null,
+                  name,
+                  description,
+                  location,
+                  imageUri,
+                },
+                navigate
+              )
+            );
             handleClose();
           }}
           autoFocus
@@ -87,6 +124,12 @@ export default function StructureEditorDialog({ open, handleClose }) {
           Save
         </Button>
       </DialogActions>
+      <ImagePickerDialog
+        open={isShowImagePicker}
+        handleClose={() => setShowImagePicker(false)}
+        saveHandler={(image) => setImageUri(image)}
+        imageUri={imageUri}
+      />
     </Dialog>
   );
 }

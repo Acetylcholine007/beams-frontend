@@ -34,8 +34,9 @@ import { useNavigate, Link } from "react-router-dom";
 import { Business, Foundation, Search, Sensors } from "@mui/icons-material";
 
 const NodeDetailsPage = () => {
-  const { snapshots, structure, node, datetime, seconds } =
-    useSelector((state) => state.dashboard);
+  const { snapshots, structure, node, datetime, seconds } = useSelector(
+    (state) => state.dashboard
+  );
   const [isShowDialog, setShowDialog] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -60,15 +61,9 @@ const NodeDetailsPage = () => {
     };
   });
 
-  // useEffect(() => {
-  //   if (isReadingsInitialized) {
-  //     dispatch(fetchReadings(datetime, node.serialKey));
-  //   }
-  // }, [datetime]);
-
   useEffect(() => {
     dispatch(fetchNode(node._id));
-    return () => dispatch(dashboardActions.setInitialized(false));
+    return () => dispatch(dashboardActions.cleanNode());
   }, []);
 
   const socketHandler = (data) => {
@@ -139,7 +134,7 @@ const NodeDetailsPage = () => {
           <IconButton
             onClick={() => {
               if (new Date(datetime) !== "Invalid Date") {
-                console.log(datetime)
+                console.log(datetime);
                 dispatch(fetchReadings(datetime, node.serialKey));
               }
             }}
@@ -167,7 +162,6 @@ const NodeDetailsPage = () => {
               <Typography variant="caption" sx={{ paddingRight: "0.6rem" }}>
                 Snapshots:{" "}
               </Typography>
-              {/* <Timer sx={{ transform: "scale(0.8)", marginRight: '0.5rem' }} /> */}
               <Slider
                 step={1}
                 marks

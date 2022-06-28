@@ -19,8 +19,7 @@ const patchStructure = async (structureId, data) => {
 };
 
 const deleteStructure = async (structureId) => {
-  loadingDispatch({ type: "SET_PARAMS", payload: { isOpen: true } });
-  return await requestAxios(`/nodes/${structureId}`, {}, "DELETE");
+  return await requestAxios(`/structures/${structureId}`, {}, "DELETE");
 };
 
 const StructureAPI = {

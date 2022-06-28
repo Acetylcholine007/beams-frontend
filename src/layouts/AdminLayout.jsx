@@ -18,15 +18,16 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useTheme } from "@mui/material/styles";
 import { feedbackActions } from "../store/slices/FeedbackSlice";
-import { Menu } from "@mui/icons-material";
+import { Logout, Menu } from "@mui/icons-material";
 import AdminRoutes, {
   adminRouteAuth,
   adminRoutes,
 } from "../routes/AdminRoutes";
+import { logout } from "../store/actions/authActions";
 
 const drawerWidth = 240;
 
@@ -71,10 +72,15 @@ function AdminLayout({ window }) {
       >
         <List>
           {adminRouteAuth.map((route) => (
-            <ListItem key={route.title} disablePadding>
-              <ListItemButton sx={{ textAlign: "left" }}>
-                <ListItemIcon>{route.icon}</ListItemIcon>
-                <ListItemText primary={route.title} />
+            <ListItem disablePadding>
+              <ListItemButton
+                sx={{ textAlign: "left" }}
+                onClick={() => dispatch(logout(navigate))}
+              >
+                <ListItemIcon>
+                  <Logout />
+                </ListItemIcon>
+                <ListItemText primary="Sign Out" />
               </ListItemButton>
             </ListItem>
           ))}
@@ -118,8 +124,11 @@ function AdminLayout({ window }) {
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {adminRouteAuth.map((route) => (
-              <Button key={route.title} sx={{ color: "#fff" }}>
-                {route.title}
+              <Button
+                sx={{ color: "#fff" }}
+                onClick={() => dispatch(logout(navigate))}
+              >
+                Sign Out
               </Button>
             ))}
           </Box>
@@ -162,7 +171,7 @@ function AdminLayout({ window }) {
             overflow: "auto",
             display: "flex",
             flexDirection: "column",
-            p: 3,
+            zIndex: 0,
           }}
         >
           <AdminRoutes />

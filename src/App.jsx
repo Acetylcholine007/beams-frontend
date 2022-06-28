@@ -40,7 +40,7 @@ function App() {
   // AUTO LOGIN
   useEffect(() => {
     const storedData = JSON.parse(
-      localStorage.getItem(import.meta.env.LS_USER_DATA)
+      localStorage.getItem(import.meta.env.VITE_LS_USER_DATA)
     );
     if (
       storedData &&

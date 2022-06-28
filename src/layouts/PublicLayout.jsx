@@ -18,7 +18,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useTheme } from "@mui/material/styles";
 import { feedbackActions } from "../store/slices/FeedbackSlice";
@@ -27,16 +27,11 @@ import PublicRoutes, {
   publicRouteAuth,
   publicRoutes,
 } from "../routes/PublicRoutes";
-import SigninPage from "../views/authView/dialogs/SignInDialog";
-import RegisterPage from "../views/authView/dialogs/RegisterDialog";
-import SignInDialog from "../views/authView/dialogs/SignInDialog";
 
 const drawerWidth = 240;
 
 function PublicLayout({ window }) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isShowSignin, setShowSignin] = useState(false);
-  const [isShowRegister, setShowRegister] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -78,7 +73,7 @@ function PublicLayout({ window }) {
           <ListItem disablePadding>
             <ListItemButton
               sx={{ textAlign: "left" }}
-              onClick={() => setShowSignin(true)}
+              onClick={() => navigate("/signin")}
             >
               <ListItemIcon>
                 <Login />
@@ -89,7 +84,7 @@ function PublicLayout({ window }) {
           <ListItem disablePadding>
             <ListItemButton
               sx={{ textAlign: "left" }}
-              onClick={() => setShowRegister(true)}
+              onClick={() => navigate("/register")}
             >
               <ListItemIcon>
                 <AppRegistration />
@@ -135,8 +130,14 @@ function PublicLayout({ window }) {
             Project BEAMS
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            <Button sx={{ color: "#fff" }} onClick={() => setShowSignin(true)}>
+            <Button sx={{ color: "#fff" }} onClick={() => navigate("/signin")}>
               Sign In
+            </Button>
+            <Button
+              sx={{ color: "#fff" }}
+              onClick={() => navigate("/register")}
+            >
+              Register
             </Button>
           </Box>
         </Toolbar>
@@ -200,23 +201,7 @@ function PublicLayout({ window }) {
             {feedbackParams.snackbarMessage}
           </Alert>
         </Snackbar>
-        <SigninPage
-          open={isShowSignin}
-          handleClose={() => {
-            setShowSignin(false);
-          }}
-        />
-        <RegisterPage
-          open={isShowRegister}
-          handleClose={() => {
-            setShowRegister(false);
-          }}
-        />
       </Box>
-      <SignInDialog
-        open={isShowSignin}
-        handleClose={() => setShowSignin(false)}
-      />
     </Box>
   );
 }

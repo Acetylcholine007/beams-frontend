@@ -24,7 +24,7 @@ export const login = (email, password, tokenExpirationDate, navigate) => {
       dispatch(profileActions.setUser(response.user));
       dispatch(profileActions.setNewUser(response.user));
       localStorage.setItem(
-        import.meta.env.LS_USER_DATA,
+        import.meta.env.VITE_LS_USER_DATA,
         JSON.stringify({
           userId: response.user.userId,
           token: response.user.token,
