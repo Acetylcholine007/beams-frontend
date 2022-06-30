@@ -104,18 +104,13 @@ const NodeDetailsToolBar = ({
           <LocalizationProvider dateAdapter={AdapterLuxon}>
             <DateTimePicker
               renderInput={(props) => (
-                <TextField
-                  size="small"
-                  {...props}
-                  sx={{ minWidth: "20rem" }}
-                  endIcon
-                />
+                <TextField size="small" {...props} sx={{ minWidth: "20rem" }} />
               )}
               value={datetime}
               onChange={(newValue) => {
-                dispatch(dashboardActions.setDatetime(newValue));
+                dispatch(dashboardActions.setDatetime(newValue.toString()));
               }}
-              onChangeCommitted={(newValue) => console.log(newValue)}
+              onChangeCommitted={(newValue) => console.log(">>>>>>>>>")}
             />
           </LocalizationProvider>
           <Stack direction="row" alignItems="center" sx={{ width: "100%" }}>

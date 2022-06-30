@@ -18,6 +18,18 @@ const dashboardSlice = createSlice({
       { name: "Y", data: [] },
       { name: "Z", data: [] },
     ],
+    realTimeRawReadings2: {
+      rawX: [],
+      rawY: [],
+      rawZ: [],
+      rawDatetime: [],
+    },
+    realTimeFFTReadings2: {
+      fftX: [],
+      fftY: [],
+      fftZ: [],
+      fftFrequency: [],
+    },
     seconds: 0,
     snapshots: 60,
     datetime: null,
@@ -44,6 +56,18 @@ const dashboardSlice = createSlice({
         { name: "Y", data: [] },
         { name: "Z", data: [] },
       ];
+      state.realTimeRawReadings2 = {
+        rawX: [],
+        rawY: [],
+        rawZ: [],
+        rawDatetime: [],
+      };
+      state.realTimeFFTReadings2 = {
+        fftX: [],
+        fftY: [],
+        fftZ: [],
+        fftFrequency: [],
+      };
       state.snapshots = 60;
       state.seconds = 0;
     },
@@ -111,6 +135,58 @@ const dashboardSlice = createSlice({
       state.realTimeFFTReadings[0].data = action.payload.x;
       state.realTimeFFTReadings[1].data = action.payload.y;
       state.realTimeFFTReadings[2].data = action.payload.z;
+    },
+
+    setRealTimeRawReadings2(state, action) {
+      if (state.realTimeRawReadings2.rawDatetime.length >= 100) {
+        state.realTimeRawReadings2.rawDatetime =
+          state.realTimeRawReadings2.rawDatetime.slice(10);
+        state.realTimeRawReadings2.rawDatetime = [
+          ...state.realTimeRawReadings2.rawDatetime,
+          ...action.payload.rawDatetime,
+        ];
+        state.realTimeRawReadings2.rawX =
+          state.realTimeRawReadings2.rawX.slice(10);
+        state.realTimeRawReadings2.rawX = [
+          ...state.realTimeRawReadings2.rawX,
+          ...action.payload.rawX,
+        ];
+        state.realTimeRawReadings2.rawY =
+          state.realTimeRawReadings2.rawY.slice(10);
+        state.realTimeRawReadings2.rawY = [
+          ...state.realTimeRawReadings2.rawY,
+          ...action.payload.rawY,
+        ];
+        state.realTimeRawReadings2.rawZ =
+          state.realTimeRawReadings2.rawZ.slice(10);
+        state.realTimeRawReadings2.rawZ = [
+          ...state.realTimeRawReadings2.rawZ,
+          ...action.payload.rawZ,
+        ];
+      } else {
+        state.realTimeRawReadings2.rawDatetime = [
+          ...state.realTimeRawReadings2.rawDatetime,
+          ...action.payload.rawDatetime,
+        ];
+        state.realTimeRawReadings2.rawX = [
+          ...state.realTimeRawReadings2.rawX,
+          ...action.payload.rawX,
+        ];
+        state.realTimeRawReadings2.rawY = [
+          ...state.realTimeRawReadings2.rawY,
+          ...action.payload.rawY,
+        ];
+        state.realTimeRawReadings2.rawZ = [
+          ...state.realTimeRawReadings2.rawZ,
+          ...action.payload.rawZ,
+        ];
+      }
+    },
+    setRealTimeFFTReadings2(state, action) {
+      state.realTimeFFTReadings2.fftFrequency = action.payload.fftFrequency;
+      state.realTimeFFTReadings2.fftX = action.payload.fftX;
+      state.realTimeFFTReadings2.fftY = action.payload.fftY;
+      state.realTimeFFTReadings2.fftZ = action.payload.fftZ;
     },
     setStructurePagePage(state, action) {
       state.structurePage = action.payload;

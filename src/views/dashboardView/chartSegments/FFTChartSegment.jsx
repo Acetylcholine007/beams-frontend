@@ -11,9 +11,12 @@ import { useSelector } from "react-redux";
 import FrequencyChart from "../charts/FrequencyChart";
 import RealTimeFFTChart from "../charts/RealTimeFFTChart";
 import { useMemo } from "react";
+import RealTimeFFTChart2 from "../charts/RealTimeFFTChart2";
 
 const FFTChartSegment = () => {
-  const { readings, seconds } = useSelector((state) => state.dashboard);
+  const { readings, seconds, realTimeFFTReadings2 } = useSelector(
+    (state) => state.dashboard
+  );
   const data = useMemo(
     () =>
       readings[seconds]
@@ -58,7 +61,9 @@ const FFTChartSegment = () => {
               alignItems: "stretch",
             }}
           >
-            {readings && <RealTimeFFTChart />}
+            {readings && (
+              <RealTimeFFTChart2 realTimeFFTReadings2={realTimeFFTReadings2} />
+            )}
             {!readings && <CircularProgress sx={{ alignSelf: "center" }} />}
           </CardContent>
         </Card>

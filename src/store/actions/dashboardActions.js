@@ -39,7 +39,6 @@ export const fetchReadings = (datetime, serialKey) => {
     );
     dispatch(feedbackActions.setLoading(false));
     if (response.status === 200) {
-      console.log(response.readings);
       let datetime = null;
       if (response.readings.length !== 0) {
         const jsDatetime = new Date(response.readings[0].rawDatetime[0]);
@@ -49,7 +48,7 @@ export const fetchReadings = (datetime, serialKey) => {
         dashboardActions.setReadings({
           readings: response.readings,
           seconds: 0,
-          datetime,
+          datetime: datetime?.toString() || "",
         })
       );
     } else {
@@ -79,7 +78,7 @@ export const fetchNode = (nodeId) => {
         dashboardActions.initializeReadings({
           readings: response.readings,
           seconds: 0,
-          datetime,
+          datetime: datetime?.toString() || "",
         })
       );
     } else {

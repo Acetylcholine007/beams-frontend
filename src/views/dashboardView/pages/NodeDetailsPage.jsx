@@ -39,27 +39,24 @@ const NodeDetailsPage = () => {
   const socketHandler = (data) => {
     setIntervalX(
       (index) => {
-        const datetimeChunk = data.rawDatetime.slice(
-          subChunkSize * index,
-          subChunkSize * index + subChunkSize
-        );
-        const xChunk = data.rawX.slice(
-          subChunkSize * index,
-          subChunkSize * index + subChunkSize
-        );
-        const yChunk = data.rawY.slice(
-          subChunkSize * index,
-          subChunkSize * index + subChunkSize
-        );
-        const zChunk = data.rawZ.slice(
-          subChunkSize * index,
-          subChunkSize * index + subChunkSize
-        );
         dispatch(
-          dashboardActions.setRealTimeRawReadings({
-            x: datetimeChunk.map((date, i) => ({ x: date, y: xChunk[i] })),
-            y: datetimeChunk.map((date, i) => ({ x: date, y: yChunk[i] })),
-            z: datetimeChunk.map((date, i) => ({ x: date, y: zChunk[i] })),
+          dashboardActions.setRealTimeRawReadings2({
+            rawDatetime: data.rawDatetime.slice(
+              subChunkSize * index,
+              subChunkSize * index + subChunkSize
+            ),
+            rawX: data.rawX.slice(
+              subChunkSize * index,
+              subChunkSize * index + subChunkSize
+            ),
+            rawY: data.rawY.slice(
+              subChunkSize * index,
+              subChunkSize * index + subChunkSize
+            ),
+            rawZ: data.rawZ.slice(
+              subChunkSize * index,
+              subChunkSize * index + subChunkSize
+            ),
           })
         );
       },
@@ -67,22 +64,7 @@ const NodeDetailsPage = () => {
       mainChunkSize / subChunkSize
     );
 
-    dispatch(
-      dashboardActions.setRealTimeFFTReadings({
-        x: data.fftFrequency.map((frequency, index) => ({
-          x: frequency,
-          y: data.fftX[index],
-        })),
-        y: data.fftFrequency.map((frequency, index) => ({
-          x: frequency,
-          y: data.fftY[index],
-        })),
-        z: data.fftFrequency.map((frequency, index) => ({
-          x: frequency,
-          y: data.fftZ[index],
-        })),
-      })
-    );
+    dispatch(dashboardActions.setRealTimeFFTReadings2(data));
   };
 
   useSocket(node.serialKey, socketHandler);

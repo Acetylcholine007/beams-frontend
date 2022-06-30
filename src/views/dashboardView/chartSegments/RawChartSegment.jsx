@@ -10,9 +10,12 @@ import { useSelector } from "react-redux";
 import LineChart from "../charts/LineChart";
 import RealTimeRawChart from "../charts/RealTimeRawChart";
 import { useMemo } from "react";
+import RealTimeRawChart2 from "../charts/RealTimeRawChart2";
 
 const RawChartSegment = () => {
-  const { readings, seconds } = useSelector((state) => state.dashboard);
+  const { readings, seconds, realTimeRawReadings2 } = useSelector(
+    (state) => state.dashboard
+  );
   const data = useMemo(
     () =>
       readings[seconds]
@@ -57,7 +60,9 @@ const RawChartSegment = () => {
               alignItems: "stretch",
             }}
           >
-            {readings && <RealTimeRawChart />}
+            {readings && (
+              <RealTimeRawChart2 realTimeRawReadings2={realTimeRawReadings2} />
+            )}
             {!readings && <CircularProgress sx={{ alignSelf: "center" }} />}
           </CardContent>
         </Card>
