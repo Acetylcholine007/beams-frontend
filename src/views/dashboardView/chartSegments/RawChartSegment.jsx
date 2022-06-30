@@ -6,13 +6,28 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import React from "react";
 import { useSelector } from "react-redux";
-import FrequencyChart from "../../../shared/components/FrequencyChart";
-import RealTimeFFTChart from "../../../shared/components/RealTimeFFTChart";
+import LineChart from "../charts/LineChart";
+import RealTimeRawChart from "../charts/RealTimeRawChart";
+import { useMemo } from "react";
 
-const FFTChart = () => {
+const RawChartSegment = () => {
   const { readings, seconds } = useSelector((state) => state.dashboard);
+  const data = useMemo(
+    () =>
+      readings[seconds]
+        ? [
+            { name: "X", data: readings[seconds].rawX },
+            { name: "Y", data: readings[seconds].rawY },
+            { name: "Z", data: readings[seconds].rawZ },
+          ]
+        : [
+            { name: "X", data: [] },
+            { name: "Y", data: [] },
+            { name: "Z", data: [] },
+          ],
+    [readings]
+  );
 
   return (
     <>
@@ -28,7 +43,7 @@ const FFTChart = () => {
           <CardHeader
             title={
               <Typography variant="h6" color="white">
-                Realtime FFT Accelerometer Readings
+                Realtime Raw Accelerometer Readings
               </Typography>
             }
             sx={{ backgroundColor: "primary.main" }}
@@ -42,7 +57,7 @@ const FFTChart = () => {
               alignItems: "stretch",
             }}
           >
-            {readings && <RealTimeFFTChart />}
+            {readings && <RealTimeRawChart />}
             {!readings && <CircularProgress sx={{ alignSelf: "center" }} />}
           </CardContent>
         </Card>
@@ -59,7 +74,7 @@ const FFTChart = () => {
           <CardHeader
             title={
               <Typography variant="h6" color="white">
-                FFT Reading Snapshot
+                Raw Reading Snapshot
               </Typography>
             }
             sx={{ backgroundColor: "primary.main" }}
@@ -74,25 +89,9 @@ const FFTChart = () => {
             }}
           >
             {readings[seconds] && (
-              <FrequencyChart
-                data={[
-                  { name: "X", data: readings[seconds].fftX },
-                  { name: "Y", data: readings[seconds].fftY },
-                  { name: "Z", data: readings[seconds].fftZ },
-                ]}
-                xAxis={readings[seconds].fftFrequency}
-              />
+              <LineChart data={data} xAxis={readings[seconds].rawDatetime} />
             )}
-            {!readings[seconds] && (
-              <FrequencyChart
-                data={[
-                  { name: "X", data: [] },
-                  { name: "Y", data: [] },
-                  { name: "Z", data: [] },
-                ]}
-                xAxis={[]}
-              />
-            )}
+            {!readings[seconds] && <LineChart data={data} xAxis={[]} />}
             {!readings && <CircularProgress sx={{ alignSelf: "center" }} />}
           </CardContent>
         </Card>
@@ -101,4 +100,4 @@ const FFTChart = () => {
   );
 };
 
-export default FFTChart;
+export default RawChartSegment;

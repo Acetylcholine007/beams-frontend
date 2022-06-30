@@ -14,11 +14,11 @@ const RealTimeRawChart = () => {
         enabled: false,
       },
       animations: {
-        enabled: true,
-        easing: "linear",
-        dynamicAnimation: {
-          speed: ADDING_DATA_INTERVAL_IN_MILLISECONDS,
-        },
+        enabled: false,
+        // easing: "linear",
+        // dynamicAnimation: {
+        //   speed: ADDING_DATA_INTERVAL_IN_MILLISECONDS,
+        // },
       },
     },
     // xaxis: {
@@ -37,8 +37,8 @@ const RealTimeRawChart = () => {
       type: "datetime",
       range: TIME_RANGE_IN_MILLISECONDS,
       labels: {
-        format: 'dd/MM',
-      }
+        format: "dd/MM",
+      },
     },
     yaxis: {
       labels: {

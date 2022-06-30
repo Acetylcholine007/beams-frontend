@@ -1,6 +1,8 @@
 import Chart from "react-apexcharts";
+import { DateTime } from "luxon";
+import { memo } from "react";
 
-const FrequencyChart = ({ data, xAxis, isTimeDomain }) => {
+const LineChart = ({ data, xAxis }) => {
   return (
     <Chart
       options={{
@@ -8,7 +10,11 @@ const FrequencyChart = ({ data, xAxis, isTimeDomain }) => {
           id: "basic-bar",
         },
         xaxis: {
-          categories: xAxis.map((value) => `${value} Hz`),
+          categories: xAxis.map((stamp) =>
+            DateTime.fromISO(stamp)
+              .setZone("Asia/Manila")
+              .toFormat("ss' sec. 'SSS' ms.'")
+          ),
         },
         yaxis: {
           labels: {
@@ -28,4 +34,4 @@ const FrequencyChart = ({ data, xAxis, isTimeDomain }) => {
   );
 };
 
-export default FrequencyChart;
+export default memo(LineChart);

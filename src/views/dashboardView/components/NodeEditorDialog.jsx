@@ -17,8 +17,9 @@ import {
 } from "@mui/material";
 import { saveNode } from "../../../store/actions/dashboardActions";
 import ImagePickerDialog from "../../../shared/components/ImagePickerDialog";
+import { memo } from "react";
 
-export default function NodeEditorDialog({ open, handleClose }) {
+const NodeEditorDialog = ({ open, handleClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
   const [serialKey, setSerialKey] = useState("");
@@ -131,4 +132,6 @@ export default function NodeEditorDialog({ open, handleClose }) {
       />
     </Dialog>
   );
-}
+};
+
+export default memo(NodeEditorDialog);

@@ -1,9 +1,9 @@
 import React from 'react'
 
-const RSAChart = () => {
+const RSAChartSegment = () => {
   return (
     <div>RSAChart</div>
   )
 }
 
-export default RSAChart
+export default RSAChartSegment

@@ -72,19 +72,17 @@ function AdminLayout({ window }) {
         }}
       >
         <List>
-          {adminRouteAuth.map((route) => (
-            <ListItem disablePadding>
-              <ListItemButton
-                sx={{ textAlign: "left" }}
-                onClick={() => dispatch(logout(navigate))}
-              >
-                <ListItemIcon>
-                  <Logout />
-                </ListItemIcon>
-                <ListItemText primary="Sign Out" />
-              </ListItemButton>
-            </ListItem>
-          ))}
+          <ListItem disablePadding>
+            <ListItemButton
+              sx={{ textAlign: "left" }}
+              onClick={() => dispatch(logout(navigate))}
+            >
+              <ListItemIcon>
+                <Logout />
+              </ListItemIcon>
+              <ListItemText primary="Sign Out" />
+            </ListItemButton>
+          </ListItem>
         </List>
       </div>
     </Box>
@@ -127,14 +125,12 @@ function AdminLayout({ window }) {
           </ButtonBase>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            {adminRouteAuth.map((route) => (
-              <Button
-                sx={{ color: "#fff" }}
-                onClick={() => dispatch(logout(navigate))}
-              >
-                Sign Out
-              </Button>
-            ))}
+            <Button
+              sx={{ color: "#fff" }}
+              onClick={() => dispatch(logout(navigate))}
+            >
+              Sign Out
+            </Button>
           </Box>
         </Toolbar>
         {feedbackParams.isLoading && <LinearProgress />}

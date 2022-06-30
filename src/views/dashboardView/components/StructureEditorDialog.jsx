@@ -11,8 +11,9 @@ import { Box, CardActionArea, Stack, TextField, Tooltip } from "@mui/material";
 import { saveStructure } from "../../../store/actions/dashboardActions";
 import ImagePickerDialog from "../../../shared/components/ImagePickerDialog";
 import { useNavigate } from "react-router-dom";
+import { memo } from "react";
 
-export default function StructureEditorDialog({ open, handleClose }) {
+const StructureEditorDialog = ({ open, handleClose }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
   const [name, setName] = useState("");
@@ -132,4 +133,6 @@ export default function StructureEditorDialog({ open, handleClose }) {
       />
     </Dialog>
   );
-}
+};
+
+export default memo(StructureEditorDialog);

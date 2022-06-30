@@ -1,9 +1,9 @@
 import React from 'react'
 
-const BollingerChart = () => {
+const BollingerChartSegment = () => {
   return (
     <div>BollingerChart</div>
   )
 }
 
-export default BollingerChart
+export default BollingerChartSegment

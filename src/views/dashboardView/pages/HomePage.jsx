@@ -16,8 +16,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchStructures } from "../../../store/actions/dashboardActions";
@@ -34,6 +33,10 @@ const HomePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useTheme();
+
+  useEffect(() => {
+    dispatch(dashboardActions.setSelectedStructure(null));
+  }, []);
 
   useEffect(() => {
     dispatch(
