@@ -67,28 +67,27 @@ const dashboardSlice = createSlice({
       state.snapshots = action.payload.readings.length;
     },
     setDatetime(state, action) {
-      // state.isReadingsInitialized = true;
       state.datetime = action.payload;
     },
     setSeconds(state, action) {
       state.seconds = action.payload;
     },
     setRealTimeRawReadings(state, action) {
-      if (state.realTimeRawReadings[0].data.length >= 500) {
+      if (state.realTimeRawReadings[0].data.length >= 600) {
         state.realTimeRawReadings[0].data =
-          state.realTimeRawReadings[0].data.slice(400);
+          state.realTimeRawReadings[0].data.slice(300);
         state.realTimeRawReadings[0].data = [
           ...state.realTimeRawReadings[0].data,
           ...action.payload.x,
         ];
         state.realTimeRawReadings[1].data =
-          state.realTimeRawReadings[1].data.slice(400);
+          state.realTimeRawReadings[1].data.slice(300);
         state.realTimeRawReadings[1].data = [
           ...state.realTimeRawReadings[1].data,
           ...action.payload.y,
         ];
         state.realTimeRawReadings[2].data =
-          state.realTimeRawReadings[2].data.slice(400);
+          state.realTimeRawReadings[2].data.slice(300);
         state.realTimeRawReadings[2].data = [
           ...state.realTimeRawReadings[2].data,
           ...action.payload.z,

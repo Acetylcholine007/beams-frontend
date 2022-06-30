@@ -13,14 +13,33 @@ import {
   Toolbar,
 } from "@mui/material";
 import { emphasize, styled } from "@mui/material/styles";
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { deleteStructure } from "../../../store/actions/dashboardActions";
 import { dashboardActions } from "../../../store/slices/DashboardSlice";
 import NodeEditorDialog from "../components/NodeEditorDialog";
 import StructureEditorDialog from "../components/StructureEditorDialog";
+
+const StyledBreadcrumb = styled(Chip)(({ theme }) => {
+  const backgroundColor =
+    theme.palette.mode === "light"
+      ? theme.palette.grey[100]
+      : theme.palette.grey[800];
+  return {
+    backgroundColor,
+    height: theme.spacing(3),
+    color: theme.palette.text.primary,
+    fontWeight: theme.typography.fontWeightRegular,
+    "&:hover, &:focus": {
+      backgroundColor: emphasize(backgroundColor, 0.06),
+    },
+    "&:active": {
+      boxShadow: theme.shadows[1],
+      backgroundColor: emphasize(backgroundColor, 0.12),
+    },
+  };
+});
 
 const StructurePage = () => {
   const { token } = useSelector((state) => state.auth);
@@ -30,25 +49,9 @@ const StructurePage = () => {
   const [isShowStructureDialog, setShowStructureDialog] = useState(false);
   const [isShowNodeDialog, setShowNodeDialog] = useState(false);
 
-  const StyledBreadcrumb = styled(Chip)(({ theme }) => {
-    const backgroundColor =
-      theme.palette.mode === "light"
-        ? theme.palette.grey[100]
-        : theme.palette.grey[800];
-    return {
-      backgroundColor,
-      height: theme.spacing(3),
-      color: theme.palette.text.primary,
-      fontWeight: theme.typography.fontWeightRegular,
-      "&:hover, &:focus": {
-        backgroundColor: emphasize(backgroundColor, 0.06),
-      },
-      "&:active": {
-        boxShadow: theme.shadows[1],
-        backgroundColor: emphasize(backgroundColor, 0.12),
-      },
-    };
-  });
+  useEffect(() => {
+    dispatch(dashboardActions.cleanNode());
+  }, []);
 
   return (
     <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>

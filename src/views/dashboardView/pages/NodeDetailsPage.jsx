@@ -23,7 +23,6 @@ const NodeDetailsPage = () => {
 
   useEffect(() => {
     dispatch(fetchNode(node._id));
-    return () => dispatch(dashboardActions.cleanNode());
   }, []);
 
   function setIntervalX(callback, delay, repetitions) {
