@@ -3,7 +3,13 @@ import { authActions } from "../slices/AuthSlice";
 import { feedbackActions } from "../slices/FeedbackSlice";
 import { profileActions } from "../slices/ProfileSlice";
 
-export const login = (email, password, tokenExpirationDate, navigate) => {
+export const login = (
+  email,
+  password,
+  tokenExpirationDate,
+  navigate,
+  feedbacks
+) => {
   return async (dispatch) => {
     dispatch(feedbackActions.setLoading(true));
     const response = await AuthAPI.login(email, password);
@@ -45,18 +51,25 @@ export const login = (email, password, tokenExpirationDate, navigate) => {
       );
       dispatch(authActions.setShowResendVerification(true));
     } else {
-      dispatch(
-        feedbackActions.setNotification({
-          snackbarMessage: response.data.message,
-          isShowSnackbar: true,
-          severity: "error",
-        })
-      );
+      if (Array.isArray(response.data.data))
+        response.data.data.forEach((item) =>
+          feedbacks[item.param](false, item.msg)
+          // console.log( feedbacks[item.param])
+        );
+      else {
+        dispatch(
+          feedbackActions.setNotification({
+            snackbarMessage: response.data.message,
+            isShowSnackbar: true,
+            severity: "error",
+          })
+        );
+      }
     }
   };
 };
 
-export const signup = (user, navigate) => {
+export const signup = (user, navigate, feedbacks) => {
   return async (dispatch) => {
     dispatch(feedbackActions.setLoading(true));
     const response = await AuthAPI.signup(user);
@@ -71,13 +84,19 @@ export const signup = (user, navigate) => {
         })
       );
     } else {
-      dispatch(
-        feedbackActions.setNotification({
-          snackbarMessage: response.data.message,
-          isShowSnackbar: true,
-          severity: "error",
-        })
-      );
+      if (Array.isArray(response.data.data))
+        response.data.data.forEach((item) =>
+          feedbacks[item.param](false, item.msg)
+        );
+      else {
+        dispatch(
+          feedbackActions.setNotification({
+            snackbarMessage: response.data.message,
+            isShowSnackbar: true,
+            severity: "error",
+          })
+        );
+      }
     }
   };
 };

@@ -11,9 +11,6 @@ import {
   CardContent,
   CardHeader,
   Container,
-  Dialog,
-  DialogContent,
-  DialogTitle,
   Divider,
   IconButton,
   InputAdornment,
@@ -33,8 +30,8 @@ import { useEffect } from "react";
 import { authActions } from "../../../store/slices/AuthSlice";
 
 const initialState = {
-  email: "",
-  password: "",
+  email: { value: "", isValid: true, message: "" },
+  password: { value: "", isValid: true, message: "" },
   isShowPassword: false,
   isShowResendVerification: false,
   isShowPasswordReset: false,
@@ -42,16 +39,43 @@ const initialState = {
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case "email":
-      return { ...state, email: action.payload };
-    case "password":
-      return { ...state, password: action.payload };
+    case "setEmail":
+      return { ...state, email: { ...state.email, value: action.payload } };
+    case "setPassword":
+      return {
+        ...state,
+        password: { ...state.password, value: action.payload },
+      };
+    case "validateEmail":
+      return {
+        ...state,
+        email: {
+          ...state.email,
+          isValid: action.payload.isValid,
+          message: action.payload.message,
+        },
+      };
+    case "validatePassword":
+      return {
+        ...state,
+        password: {
+          ...state.password,
+          isValid: action.payload.isValid,
+          message: action.payload.message,
+        },
+      };
     case "showPassword":
       return { ...state, isShowPassword: action.payload };
     case "showResendVerification":
       return { ...state, isShowResendVerification: action.payload };
     case "showPasswordReset":
       return { ...state, isShowPasswordReset: action.payload };
+    case "resetValidation":
+      return {
+        ...state,
+        email: { ...state.email, isValid: true, message: "" },
+        password: { ...state.password, isValid: true, message: "" },
+      };
     default:
       return state;
   }
@@ -65,6 +89,30 @@ const SigninPage = () => {
   const { isShowResendVerification, isShowPasswordResetDialog } = useSelector(
     (state) => state.auth
   );
+
+  const signInHandler = () => {
+    signinDispatch({ type: "resetValidation" });
+    dispatch(
+      login(
+        signinState.email.value,
+        signinState.password.value,
+        tokenExpirationDate,
+        navigate,
+        {
+          email: (isValid, message) =>
+            signinDispatch({
+              type: "validateEmail",
+              payload: { isValid, message },
+            }),
+          password: (isValid, message) =>
+            signinDispatch({
+              type: "validatePassword",
+              payload: { isValid, message },
+            }),
+        }
+      )
+    );
+  };
 
   useEffect(
     () => () => dispatch(authActions.setShowResendVerification(false)),
@@ -108,9 +156,9 @@ const SigninPage = () => {
                 type="email"
                 variant="outlined"
                 onChange={(e) =>
-                  signinDispatch({ type: "email", payload: e.target.value })
+                  signinDispatch({ type: "setEmail", payload: e.target.value })
                 }
-                value={signinState.email}
+                value={signinState.email.value}
                 fullWidth={true}
                 InputProps={{
                   startAdornment: (
@@ -119,15 +167,20 @@ const SigninPage = () => {
                     </InputAdornment>
                   ),
                 }}
+                error={!signinState.email.isValid}
+                helperText={signinState.email.message}
               />
               <TextField
                 label="Password"
                 type={signinState.isShowPassword ? "text" : "password"}
                 variant="outlined"
                 onChange={(e) =>
-                  signinDispatch({ type: "password", payload: e.target.value })
+                  signinDispatch({
+                    type: "setPassword",
+                    payload: e.target.value,
+                  })
                 }
-                value={signinState.password}
+                value={signinState.password.value}
                 fullWidth={true}
                 InputProps={{
                   startAdornment: (
@@ -154,20 +207,13 @@ const SigninPage = () => {
                     </InputAdornment>
                   ),
                 }}
+                error={!signinState.password.isValid}
+                helperText={signinState.password.message}
               />
               <Button
                 variant="contained"
                 size="large"
-                onClick={() =>
-                  dispatch(
-                    login(
-                      signinState.email,
-                      signinState.password,
-                      tokenExpirationDate,
-                      navigate
-                    )
-                  )
-                }
+                onClick={signInHandler}
                 fullWidth
               >
                 LOGIN

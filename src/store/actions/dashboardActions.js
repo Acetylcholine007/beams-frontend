@@ -94,7 +94,7 @@ export const fetchNode = (nodeId) => {
   };
 };
 
-export const saveNode = (isNew, node) => {
+export const saveNode = (isNew, node, feedbacks, handleClose) => {
   return async (dispatch) => {
     dispatch(feedbackActions.setLoading(true));
     let response;
@@ -124,14 +124,22 @@ export const saveNode = (isNew, node) => {
           })
         );
       }
+      handleClose();
     } else {
-      dispatch(
-        feedbackActions.setNotification({
-          snackbarMessage: response.data.message,
-          isShowSnackbar: true,
-          severity: "error",
-        })
-      );
+      if (Array.isArray(response.data.data))
+        response.data.data.forEach((item) =>
+          feedbacks[item.param](false, item.msg)
+        );
+      else {
+        dispatch(
+          feedbackActions.setNotification({
+            snackbarMessage: response.data.message,
+            isShowSnackbar: true,
+            severity: "error",
+          })
+        );
+        handleClose();
+      }
     }
   };
 };
@@ -163,7 +171,13 @@ export const deleteNode = (nodeId, navigate) => {
   };
 };
 
-export const saveStructure = (isNew, structure, navigate) => {
+export const saveStructure = (
+  isNew,
+  structure,
+  navigate,
+  feedbacks,
+  handleClose
+) => {
   return async (dispatch) => {
     dispatch(feedbackActions.setLoading(true));
     let response;
@@ -194,14 +208,22 @@ export const saveStructure = (isNew, structure, navigate) => {
           })
         );
       }
+      handleClose();
     } else {
-      dispatch(
-        feedbackActions.setNotification({
-          snackbarMessage: response.data.message,
-          isShowSnackbar: true,
-          severity: "error",
-        })
-      );
+      if (Array.isArray(response.data.data))
+        response.data.data.forEach((item) =>
+          feedbacks[item.param](false, item.msg)
+        );
+      else {
+        dispatch(
+          feedbackActions.setNotification({
+            snackbarMessage: response.data.message,
+            isShowSnackbar: true,
+            severity: "error",
+          })
+        );
+        handleClose();
+      }
     }
   };
 };
