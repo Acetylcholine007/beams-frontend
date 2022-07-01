@@ -107,7 +107,7 @@ const NodeDetailsPage = () => {
         handleClose={handleConfirmClose}
         callback={deleteHandler}
         title="Delete Node"
-        message="Are you sure you want to delete this node?"
+        message="Are you sure you want to delete this node and its associated readings?"
       />
     </Box>
   );

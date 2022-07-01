@@ -10,7 +10,10 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   Box,
   CardActionArea,
+  ListItem,
+  ListItemText,
   Stack,
+  Switch,
   TextField,
   Tooltip,
 } from "@mui/material";
@@ -23,6 +26,7 @@ const initialState = {
   description: { value: "", isValid: true, message: "" },
   serialKey: { value: "", isValid: true, message: "" },
   imageUri: { value: "", isValid: true, message: "" },
+  saveMode: false,
 };
 
 const reducer = (state, action) => {
@@ -43,6 +47,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         imageUri: { ...state.imageUri, value: action.payload },
+      };
+    case "setSaveMode":
+      return {
+        ...state,
+        saveMode: action.payload,
       };
     case "validateName":
       return {
@@ -110,11 +119,13 @@ const NodeEditorDialog = ({ open, handleClose }) => {
       });
       nodeDispatch({ type: "setSerialKey", payload: node.serialKey });
       nodeDispatch({ type: "setImageUri", payload: node.imageUri });
+      nodeDispatch({ type: "setSaveMode", payload: node.saveMode });
     } else {
       nodeDispatch({ type: "setName", payload: "" });
       nodeDispatch({ type: "setDescription", payload: "" });
       nodeDispatch({ type: "setSerialKey", payload: "" });
       nodeDispatch({ type: "setImageUri", payload: "" });
+      nodeDispatch({ type: "setSaveMode", payload: false });
     }
     nodeDispatch({ type: "resetValidation" });
   }, [open]);
@@ -130,6 +141,7 @@ const NodeEditorDialog = ({ open, handleClose }) => {
           description: nodeState.description.value,
           serialKey: nodeState.serialKey.value,
           imageUri: nodeState.imageUri.value,
+          saveMode: nodeState.saveMode,
           structure: node ? node.structure : structure._id,
         },
         {
@@ -193,6 +205,7 @@ const NodeEditorDialog = ({ open, handleClose }) => {
                 payload: e.target.value,
               })
             }
+            disabled={node}
             value={nodeState.serialKey.value}
             fullWidth={true}
             error={!nodeState.serialKey.isValid}
@@ -225,6 +238,21 @@ const NodeEditorDialog = ({ open, handleClose }) => {
             error={!nodeState.description.isValid}
             helperText={nodeState.description.message}
           />
+          <ListItem
+            secondaryAction={
+              <Switch
+                checked={nodeState.saveMode}
+                onChange={(e) =>
+                  nodeDispatch({
+                    type: "setSaveMode",
+                    payload: e.target.checked,
+                  })
+                }
+              />
+            }
+          >
+            <ListItemText primary="Persist Readings" />
+          </ListItem>
         </Stack>
       </DialogContent>
       <DialogActions sx={{ justifyContent: "center" }}>

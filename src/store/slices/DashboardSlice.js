@@ -226,6 +226,7 @@ const dashboardSlice = createSlice({
       state.node.description = action.payload.description;
       state.node.serialKey = action.payload.serialKey;
       state.node.imageUri = action.payload.imageUri;
+      state.node.saveMode = action.payload.saveMode;
 
       const node = state.structure.nodes.find(
         (node) => node._id === action.payload._id
@@ -234,6 +235,7 @@ const dashboardSlice = createSlice({
       node.description = action.payload.description;
       node.serialKey = action.payload.serialKey;
       node.imageUri = action.payload.imageUri;
+      node.saveMode = action.payload.saveMode;
     },
     editStructure(state, action) {
       state.structure.name = action.payload.name;

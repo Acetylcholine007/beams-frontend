@@ -5,11 +5,16 @@ import {
   Button,
   Card,
   CardActionArea,
+  CardContent,
   CardHeader,
   Container,
+  Divider,
   Grid,
   InputAdornment,
   InputBase,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
   TextField,
   Toolbar,
   Typography,
@@ -115,7 +120,11 @@ const HomePage = () => {
           <Grid container spacing={2}>
             {token && (
               <Grid item xs={12} md={4}>
-                <Card align="center" onClick={() => setShowDialog(true)}>
+                <Card
+                  align="center"
+                  onClick={() => setShowDialog(true)}
+                  elevation={4}
+                >
                   <CardActionArea>
                     <Box
                       sx={{
@@ -158,7 +167,7 @@ const HomePage = () => {
               structures.map((structure) => (
                 <Grid item xs={12} md={4} key={structure._id}>
                   <Card
-                    align="center"
+                    elevation={4}
                     onClick={() => {
                       dispatch(
                         dashboardActions.setSelectedStructure(structure)
@@ -169,7 +178,6 @@ const HomePage = () => {
                     <CardActionArea>
                       <Box
                         sx={{
-                          marginBottom: "2rem",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -183,32 +191,43 @@ const HomePage = () => {
                               ? `url(${structure.imageUri})`
                               : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 200 200'%3E%3Cdefs%3E%3ClinearGradient id='a' gradientUnits='userSpaceOnUse' x1='100' y1='33' x2='100' y2='-3'%3E%3Cstop offset='0' stop-color='%23000' stop-opacity='0'/%3E%3Cstop offset='1' stop-color='%23000' stop-opacity='1'/%3E%3C/linearGradient%3E%3ClinearGradient id='b' gradientUnits='userSpaceOnUse' x1='100' y1='135' x2='100' y2='97'%3E%3Cstop offset='0' stop-color='%23000' stop-opacity='0'/%3E%3Cstop offset='1' stop-color='%23000' stop-opacity='1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='%233f93d1' fill-opacity='0.6'%3E%3Crect x='100' width='100' height='100'/%3E%3Crect y='100' width='100' height='100'/%3E%3C/g%3E%3Cg fill-opacity='0.5'%3E%3Cpolygon fill='url(%23a)' points='100 30 0 0 200 0'/%3E%3Cpolygon fill='url(%23b)' points='100 100 0 130 0 100 200 100 200 130'/%3E%3C/g%3E%3C/svg%3E")`,
                         }}
-                      >
-                        <Avatar
-                          sx={{
-                            border: "2px solid white",
-                            height: "5rem",
-                            width: "5rem",
-                            position: "absolute",
-                            bottom: "-2rem",
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            backgroundColor: "secondary.main",
-                          }}
-                        >
-                          <Typography variant="h6">
-                            {structure.nodes.length}
-                          </Typography>
-                          <Typography variant="caption">Nodes</Typography>
-                        </Avatar>
-                      </Box>
-                      <CardHeader
-                        title={structure.name}
-                        subheader={`${structure.location}`}
-                        sx={{ height: "4rem" }}
-                      />
+                      ></Box>
+                      <CardContent sx={{paddingTop: 0, paddingBottom: 0}}>
+                        <ListItem disableGutters dense>
+                          <ListItemAvatar>
+                            <Avatar
+                              sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                backgroundColor: "secondary.main",
+                                borderRadius: "0.5rem",
+                                width: "3rem",
+                              }}
+                            >
+                              <Typography variant="body1" noWrap>
+                                {structure.nodes.length}
+                              </Typography>
+                              <Typography
+                                noWrap
+                                variant="caption"
+                                sx={{ fontSize: "0.8rem" }}
+                              >
+                                Nodes
+                              </Typography>
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={structure.name}
+                            secondary={structure.location}
+                          />
+                        </ListItem>
+                        <Divider />
+                        <Typography noWrap sx={{marginBottom: 1, marginTop: 0.5}}>
+                          {structure.description}
+                        </Typography>
+                      </CardContent>
                     </CardActionArea>
                   </Card>
                 </Grid>
