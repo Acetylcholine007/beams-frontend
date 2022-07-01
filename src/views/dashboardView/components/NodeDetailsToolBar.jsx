@@ -16,12 +16,9 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import {
-  deleteNode,
-  fetchReadings,
-} from "../../../store/actions/dashboardActions";
+import { fetchReadings } from "../../../store/actions/dashboardActions";
 import { dashboardActions } from "../../../store/slices/DashboardSlice";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Business, Foundation, Search, Sensors } from "@mui/icons-material";
 import { useEffect } from "react";
 import { memo } from "react";
@@ -48,6 +45,7 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
 
 const NodeDetailsToolBar = ({
   setShowDialog,
+  setShowConfirmDialog,
   token,
   snapshots,
   structure,
@@ -57,7 +55,6 @@ const NodeDetailsToolBar = ({
 }) => {
   const [localSeconds, setLocalSeconds] = useState(0);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   useEffect(() => {
     setLocalSeconds(seconds);
@@ -158,7 +155,7 @@ const NodeDetailsToolBar = ({
               variant="contained"
               sx={{ minWidth: "8rem", marginLeft: 2 }}
               color="error"
-              onClick={() => dispatch(deleteNode(node._id, navigate))}
+              onClick={() => setShowConfirmDialog(true)}
             >
               Delete Node
             </Button>

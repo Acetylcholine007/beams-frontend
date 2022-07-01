@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   Box,
   CardActionArea,
-  CardMedia,
   Stack,
   TextField,
   Tooltip,

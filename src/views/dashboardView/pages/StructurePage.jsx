@@ -14,8 +14,10 @@ import {
 } from "@mui/material";
 import { emphasize, styled } from "@mui/material/styles";
 import React, { useState, useEffect } from "react";
+import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
+import ConfirmDialog from "../../../shared/components/ConfirmDialog";
 import { deleteStructure } from "../../../store/actions/dashboardActions";
 import { dashboardActions } from "../../../store/slices/DashboardSlice";
 import NodeEditorDialog from "../components/NodeEditorDialog";
@@ -48,6 +50,21 @@ const StructurePage = () => {
   const dispatch = useDispatch();
   const [isShowStructureDialog, setShowStructureDialog] = useState(false);
   const [isShowNodeDialog, setShowNodeDialog] = useState(false);
+  const [isShowConfirmDialog, setShowConfirmDialog] = useState(false);
+
+  const deleteHandler = useCallback(
+    () => dispatch(deleteStructure(structure._id, navigate)),
+    []
+  );
+
+  const handleConfirmClose = useCallback(() => setShowConfirmDialog(false), []);
+
+  const handleStructureClose = useCallback(
+    () => setShowStructureDialog(false),
+    []
+  );
+
+  const handleNodeClose = useCallback(() => setShowNodeDialog(false), []);
 
   useEffect(() => {
     dispatch(dashboardActions.cleanNode());
@@ -87,9 +104,7 @@ const StructurePage = () => {
                 variant="contained"
                 sx={{ minWidth: "8rem", marginLeft: 2 }}
                 color="error"
-                onClick={() =>
-                  dispatch(deleteStructure(structure._id, navigate))
-                }
+                onClick={() => setShowConfirmDialog(true)}
               >
                 Delete Structure
               </Button>
@@ -166,11 +181,15 @@ const StructurePage = () => {
       </Box>
       <StructureEditorDialog
         open={isShowStructureDialog}
-        handleClose={() => setShowStructureDialog(false)}
+        handleClose={handleStructureClose}
       />
-      <NodeEditorDialog
-        open={isShowNodeDialog}
-        handleClose={() => setShowNodeDialog(false)}
+      <NodeEditorDialog open={isShowNodeDialog} handleClose={handleNodeClose} />
+      <ConfirmDialog
+        open={isShowConfirmDialog}
+        handleClose={handleConfirmClose}
+        callback={deleteHandler}
+        title="Delete Structure"
+        message="Are you sure you want to delete this structure and its nodes?"
       />
     </Box>
   );

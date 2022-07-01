@@ -1,13 +1,15 @@
-import { Box, Container, Divider, Grid } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, Container, Grid } from "@mui/material";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSocket } from "../../../shared/hooks/useSocket";
-import { fetchNode } from "../../../store/actions/dashboardActions";
+import { deleteNode, fetchNode } from "../../../store/actions/dashboardActions";
 import RawChartSegment from "../chartSegments/RawChartSegment";
 import FFTChartSegment from "../chartSegments/FFTChartSegment";
 import { dashboardActions } from "../../../store/slices/DashboardSlice";
 import NodeEditorDialog from "../components/NodeEditorDialog";
 import NodeDetailsToolBar from "../components/NodeDetailsToolBar";
+import ConfirmDialog from "../../../shared/components/ConfirmDialog";
+import { useNavigate } from "react-router-dom";
 
 const subChunkSize = 10;
 const mainChunkSize = 100;
@@ -19,7 +21,18 @@ const NodeDetailsPage = () => {
     (state) => state.dashboard
   );
   const [isShowDialog, setShowDialog] = useState(false);
+  const [isShowConfirmDialog, setShowConfirmDialog] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const deleteHandler = useCallback(
+    () => dispatch(deleteNode(node._id, navigate)),
+    []
+  );
+
+  const handleConfirmClose = useCallback(() => setShowConfirmDialog(false), []);
+
+  const handleEditorClose = useCallback(() => setShowDialog(false), []);
 
   useEffect(() => {
     dispatch(fetchNode(node._id));
@@ -73,6 +86,7 @@ const NodeDetailsPage = () => {
     <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <NodeDetailsToolBar
         setShowDialog={setShowDialog}
+        setShowConfirmDialog={setShowConfirmDialog}
         token={token}
         snapshots={snapshots}
         structure={structure}
@@ -87,9 +101,13 @@ const NodeDetailsPage = () => {
           </Grid>
         </Container>
       </Box>
-      <NodeEditorDialog
-        open={isShowDialog}
-        handleClose={() => setShowDialog(false)}
+      <NodeEditorDialog open={isShowDialog} handleClose={handleEditorClose} />
+      <ConfirmDialog
+        open={isShowConfirmDialog}
+        handleClose={handleConfirmClose}
+        callback={deleteHandler}
+        title="Delete Node"
+        message="Are you sure you want to delete this node?"
       />
     </Box>
   );
