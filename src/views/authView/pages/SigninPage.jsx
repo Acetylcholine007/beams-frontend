@@ -229,7 +229,7 @@ const SigninPage = () => {
               {isShowResendVerification && (
                 <Button
                   variant="text"
-                  onClick={() => dispatch(verify(signinState.email))}
+                  onClick={() => dispatch(verify(signinState.email.value))}
                 >
                   Resend Email Verification
                 </Button>
