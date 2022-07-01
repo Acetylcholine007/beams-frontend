@@ -3,6 +3,7 @@ import {
   CardContent,
   CardHeader,
   CircularProgress,
+  Divider,
   Grid,
   Typography,
 } from "@mui/material";
@@ -21,7 +22,7 @@ const RawChartSegment = () => {
         <Card
           elevation={4}
           sx={{
-            height: "40rem",
+            height: "30rem",
             display: "flex",
             flexDirection: "column",
           }}
@@ -51,6 +52,9 @@ const RawChartSegment = () => {
         </Card>
       </Grid>
       <LineChart readings={readings} seconds={seconds} />
+      <Grid item xs={12}>
+        <Divider />
+      </Grid>
     </>
   );
 };

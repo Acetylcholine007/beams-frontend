@@ -23,7 +23,7 @@ const FrequencyChart = ({ readings, seconds }) => {
             { name: "Y", data: [] },
             { name: "Z", data: [] },
           ],
-    [readings]
+    [readings, seconds]
   );
 
   return (
@@ -31,7 +31,7 @@ const FrequencyChart = ({ readings, seconds }) => {
       <Card
         elevation={4}
         sx={{
-          height: "40rem",
+          height: "30rem",
           display: "flex",
           flexDirection: "column",
         }}
@@ -71,7 +71,7 @@ const FrequencyChart = ({ readings, seconds }) => {
                   title: { text: "Amplitude" },
                 },
                 stroke: {
-                  curve: "smooth",
+                  curve: "straight",
                 },
               }}
               series={data}

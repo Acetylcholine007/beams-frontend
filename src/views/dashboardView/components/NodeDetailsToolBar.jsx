@@ -121,7 +121,7 @@ const NodeDetailsToolBar = ({
               step={1}
               marks
               min={0}
-              max={snapshots}
+              max={snapshots > 0 ? snapshots - 1 : 0}
               value={localSeconds}
               onChange={(e, val) => setLocalSeconds(val)}
               onChangeCommitted={(e, val) =>

@@ -28,7 +28,7 @@ const RealTimeRawChart2 = ({ realTimeRawReadings2 }) => {
           title: { text: "Amplitude" },
         },
         stroke: {
-          curve: "smooth",
+          curve: "straight",
         },
       }}
       series={[

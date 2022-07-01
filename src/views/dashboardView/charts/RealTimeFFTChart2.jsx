@@ -24,7 +24,7 @@ const RealTimeFFTChart2 = ({ realTimeFFTReadings2 }) => {
           title: { text: "Amplitude" },
         },
         stroke: {
-          curve: "smooth",
+          curve: "straight",
         },
       }}
       series={[

@@ -25,7 +25,7 @@ const LineChart = ({ readings, seconds }) => {
       <Card
         elevation={4}
         sx={{
-          height: "40rem",
+          height: "30rem",
           display: "flex",
           flexDirection: "column",
         }}
@@ -67,7 +67,7 @@ const LineChart = ({ readings, seconds }) => {
                   title: { text: "Amplitude" },
                 },
                 stroke: {
-                  curve: "smooth",
+                  curve: "straight",
                 },
               }}
               series={data}

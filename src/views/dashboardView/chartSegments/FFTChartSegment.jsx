@@ -22,7 +22,7 @@ const FFTChartSegment = () => {
         <Card
           elevation={4}
           sx={{
-            height: "40rem",
+            height: "30rem",
             display: "flex",
             flexDirection: "column",
           }}
