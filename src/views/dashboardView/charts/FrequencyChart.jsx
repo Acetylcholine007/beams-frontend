@@ -91,9 +91,9 @@ const FrequencyChart = ({ readings, seconds }) => {
                 },
                 yaxis: {
                   labels: {
-                    formatter: (val) => val.toFixed(2),
+                    formatter: (val) => `${val.toFixed(2)} g`,
                   },
-                  title: { text: "Amplitude" },
+                  title: { text: "Acceleration" },
                 },
                 stroke: {
                   curve: "smooth",

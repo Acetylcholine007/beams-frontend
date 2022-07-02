@@ -44,7 +44,7 @@ const RealTimeRawChart = () => {
       labels: {
         formatter: (val) => val.toFixed(0),
       },
-      title: { text: "Amplitude" },
+      title: { text: "Acceleration" },
     },
     stroke: {
       curve: "smooth",
